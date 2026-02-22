@@ -1,3 +1,6 @@
 [submodule "external/libdwarf"]
 	path = external/libdwarf
 	url = https://github.com/davea42/libdwarf-code.git
+[submodule "external/amglibplus"]
+	path = external/amglibplus
+	url = https://github.com/jopadan/AMGLib-Plus.git
