@@ -1,0 +1,15 @@
+.vscode/
+build/
+install/
+scans/
+assets/
+assetsignore/
+assets_ok/
+/blender/
+todo
+preview
+
+# generated and build files for wgpu-native
+/external/wgpu-native/target
+/external/wgpu-native/include
+.dev
