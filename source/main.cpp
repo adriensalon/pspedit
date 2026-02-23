@@ -102,6 +102,8 @@ int main(int, char**)
     // IM_ASSERT(font != nullptr);
 
     while (!glfwWindowShouldClose(window)) {
+        const std::string _window_title = window_title();
+        glfwSetWindowTitle(window, _window_title.c_str());
 
         glfwPollEvents();
         if (glfwGetWindowAttrib(window, GLFW_ICONIFIED) != 0) {

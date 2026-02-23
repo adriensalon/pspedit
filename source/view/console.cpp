@@ -1,7 +1,7 @@
 #include <imgui.h>
 
 #include <core/log.hpp>
-#include <view/panel/console.hpp>
+#include <view/console.hpp>
 
 namespace {
 
