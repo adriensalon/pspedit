@@ -1,13 +1,12 @@
 #include <optional>
 
-#include <editor/core/ppsspp.hpp>
-#include <editor/core/tool.hpp>
+#include <core/ppsspp.hpp>
+#include <core/tool.hpp>
 
 #ifndef _WIN32
 #include <sys/wait.h>
 #endif
 
-namespace pspedit {
 namespace {
 
     [[nodiscard]] static std::optional<std::filesystem::path> _find_ppsspp_executable()
@@ -131,6 +130,4 @@ void launch_ppsspp_game(const std::filesystem::path& game_directory, const std::
         _arguments.push_back(_argument);
     }
     const tool_result _result = run_capture_combined(_ppsspp_executable.value().string(), _arguments);
-}
-
 }

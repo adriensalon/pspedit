@@ -5,9 +5,7 @@
 #include <dwarf.h>
 #include <libdwarf.h>
 
-#include <editor/import/dwarf.hpp>
-
-namespace pspedit {
+#include <import/dwarf.hpp>
 
 struct dwarf_asset_reference {
     std::filesystem::path path;
@@ -456,9 +454,7 @@ static void walk_die_tree(
     return scripts;
 }
 
-void import_dwarf(const std::filesystem::path& dwarf_path, script_object& script)
+void import_dwarf(const std::filesystem::path& dwarf_path, pspedit::script_object& script)
 {
-
-}
 
 }

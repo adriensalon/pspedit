@@ -5,9 +5,8 @@
 #include <algorithm>
 #include <sstream>
 
-#include <editor/core/tool.hpp>
+#include <core/tool.hpp>
 
-namespace pspedit {
 namespace {
 
     [[nodiscard]] static bool _is_not_space(unsigned char testchar)
@@ -108,6 +107,4 @@ tool_result run_capture_combined(const std::string& executable, const std::vecto
 
     _result.stdout_text = _output;
     return _result;
-}
-
 }

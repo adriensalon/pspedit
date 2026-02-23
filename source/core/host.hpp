@@ -2,8 +2,6 @@
 
 #include <string>
 
-namespace pspedit {
-
 enum struct host_os {
     windows,
     macos,
@@ -20,5 +18,3 @@ struct host_info {
     host_arch arch;
     std::string os_version;
 };
-
-}
