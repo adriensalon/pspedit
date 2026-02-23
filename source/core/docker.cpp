@@ -1,86 +1,73 @@
-// #include <sstream>
-// #include <optional>
+#include <optional>
+#include <sstream>
 
-// #include <editor/core/docker.hpp>
-// #include <editor/core/tool.hpp>
+#include <core/docker.hpp>
+#include <core/log.hpp>
+#include <core/tool.hpp>
 
-// namespace pspedit {
-// namespace {
+namespace {
 
-//     [[nodiscard]] static std::string _normalize_newline(const std::string& unformatted)
-//     {
-//         std::string _formatted = trim(unformatted);
-//         const std::size_t _position = _formatted.find('\n');
-//         if (_position != std::string::npos) {
-//             _formatted.resize(_position);
-//         }
-//         return trim(_formatted);
-//     }
+[[nodiscard]] static std::string _normalize_newline(const std::string& unformatted)
+{
+    std::string _formatted = trim(unformatted);
+    const std::size_t _position = _formatted.find('\n');
+    if (_position != std::string::npos) {
+        _formatted.resize(_position);
+    }
+    return trim(_formatted);
+}
 
-//     static std::optional<std::filesystem::path> _docker_executable = std::nullopt;
+static constexpr const char* _pspdev_docker_image = "pspdev/pspdev:latest";
+static bool _is_docker_installed = false;
 
-// }
+}
 
-// docker_info editor_docker::probe_info() const
-// {
-//     docker_info _info;
+bool ensure_docker_ready()
+{
+    if (!_is_docker_installed) {
+        const tool_result _version_result = run_capture_combined("docker", { "--version" });
+        if (_version_result.exit_code != 0) {
+            log_error("Build", "Docker not found please install from https://www.docker.com");
+            return false;
+        } else {
+            const std::string _docker_version = _normalize_newline(_version_result.stdout_text);
+            log_message("Build", "Found " + _docker_version);
+        }
+        _is_docker_installed = true;
+    }
 
-//     const tool_result _version_result = run_capture_combined(_executable, { "--version" });
-//     _info.is_executable_found = (_version_result.exit_code == 0);
-//     if (_info.is_executable_found) {
-//         _info.version = _normalize_newline(_version_result.stdout_text);
-//     }
+    const tool_result _reachable_result = run_capture_combined("docker", { "info" });
+    if (_reachable_result.exit_code != 0) {
+        log_error("Build", "Docker not running please start the engine");
+        return false;
+    } else {
+        const tool_result _docker_engine_version_result = run_capture_combined("docker", { "version", "--format", "{{.Server.Version}}" });
+        const std::string _docker_engine_version = _normalize_newline(_docker_engine_version_result.stdout_text);
+        log_message("Build", "Found Docker engine running with version " + _docker_engine_version);
+    }
 
-//     const tool_result _reachable_result = run_capture_combined(_executable, { "info" });
-//     _info.is_daemon_reachable = (_reachable_result.exit_code == 0);
+    tool_result _inspect_result = run_capture_combined("docker", { "image", "inspect", _pspdev_docker_image, "--format", "{{.Id}}|{{.Created}}|{{.Size}}" });
+    if (_inspect_result.exit_code != 0) {
+        const tool_result _pull_result = run_capture_combined("docker", { "pull", _pspdev_docker_image });
+        if (_pull_result.exit_code != 0) {
+            log_error("Build", "Failed to fetch " + std::string(_pspdev_docker_image) + " image");
+            return false;
+        }
+        log_message("Build", "Fetched " + std::string(_pspdev_docker_image) + " docker image");
+        _inspect_result = run_capture_combined("docker", { "image", "inspect", _pspdev_docker_image, "--format", "{{.Id}}|{{.Created}}|{{.Size}}" });
+    }
+    const std::string _inspect_line = _normalize_newline(_inspect_result.stdout_text);
+    std::istringstream _inspect_line_stream(_inspect_line);
+    std::string _image_id, _image_created, _image_size;
+    std::getline(_inspect_line_stream, _image_id, '|');
+    std::getline(_inspect_line_stream, _image_created, '|');
+    std::getline(_inspect_line_stream, _image_size, '|');
+    const std::string _formatted_size = std::to_string(std::stoull(trim(_image_size)) / static_cast<std::size_t>(1e6)) + "Mb";
+    log_message("Build", "Found Docker image from " + std::string(_pspdev_docker_image) + " (" + _formatted_size + ")");
 
-//     if (_info.is_executable_found) {
-//         const tool_result _server_version_result = run_capture_combined(_executable, { "version", "--format", "{{.Server.Version}}" });
-//         if (_server_version_result.exit_code == 0) {
-//             _info.server_version = _normalize_newline(_server_version_result.stdout_text);
-//         }
-//     }
+    return true;
+}
 
-//     return _info;
-// }
-
-// docker_image_info editor_docker::inspect_image(const std::string& image) const
-// {
-//     docker_image_info _image_info;
-//     _image_info.name = image;
-
-//     const tool_result _inspect_result = run_capture_combined(_executable, { "image", "inspect", image, "--format", "{{.Id}}|{{.Created}}|{{.Size}}" });
-//     if (_inspect_result.exit_code != 0) {
-//         _image_info.is_present = false;
-//         return _image_info;
-//     }
-//     _image_info.is_present = true;
-
-//     const std::string _line = _normalize_newline(_inspect_result.stdout_text);
-//     std::istringstream _line_stream(_line);
-//     std::getline(_line_stream, _image_info.id, '|');
-//     std::getline(_line_stream, _image_info.created, '|');
-//     std::getline(_line_stream, _image_info.size, '|');
-//     _image_info.id = trim(_image_info.id);
-//     _image_info.created = trim(_image_info.created);
-//     _image_info.size = trim(_image_info.size);
-
-//     return _image_info;
-// }
-
-// tool_result editor_docker::pull_image(const std::string& image, const tool_progress_callback& callback) const
-// {
-//     if (callback) {
-//         callback({ std::nullopt, "Pulling docker image: " + image });
-//     }
-
-//     const tool_result _result = run_capture_combined(_executable, { "pull", image });
-//     if (callback) {
-//         callback({ std::nullopt, _result.exit_code == 0 ? "Docker image ready: " + image : "Failed to pull docker image: " + image });
-//     }
-
-//     return _result;
-// }
 
 // tool_result editor_docker::run_command(const editor_docker_command& command, const tool_progress_callback& callback) const
 // {
@@ -135,6 +122,4 @@
 //     }
 
 //     return _result;
-// }
-
 // }

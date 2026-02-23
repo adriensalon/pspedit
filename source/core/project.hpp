@@ -44,10 +44,11 @@ struct editor_project {
 void open_directory(const std::filesystem::path& project_directory);
 [[nodiscard]] std::optional<std::filesystem::path> project_directory();
 void save_all();
+void build_and_run();
+
 void emplace_image(const pspedit::image_object& image, const std::string& editor_name, const std::optional<std::filesystem::path>& import_path);
 void erase_image(const pspedit::image_object& image, const std::string& editor_name, const std::optional<std::filesystem::path>& import_path);
 void reimport_from_dwarf_file();
 void reload_assets();
 [[nodiscard]] bool is_project_buildable();
-void build_and_install_project();
 void run_project(const project_run_target target);
