@@ -2,6 +2,7 @@
 
 #include <core/ppsspp.hpp>
 #include <core/tool.hpp>
+#include <core/log.hpp>
 
 #ifndef _WIN32
 #include <sys/wait.h>
@@ -63,7 +64,7 @@ namespace {
                 for (const char* _ppsspp_name : _ppsspp_names) {
                     const std::filesystem::path _ppsspp_path = _env_directory / _ppsspp_name;
                     if (std::filesystem::exists(_ppsspp_path, _error)) {
-                        return p;
+                        return _ppsspp_path;
                     }
                 }
             }
@@ -120,7 +121,7 @@ bool is_ppsspp_found()
 void launch_ppsspp_game(const std::filesystem::path& game_directory, const std::vector<std::string>& arguments)
 {
     if (!_ppsspp_executable) {
-        // send error message
+        log_error("Run", "PPSSPP executable was not found on the host machine");
         return;
     }
 

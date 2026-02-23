@@ -6,11 +6,12 @@
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
 #include <stb_image_resize2.h>
 
+#include <core/log.hpp>
 #include <import/stbimage.hpp>
 
 namespace {
 
-    constexpr int _desired_channels = 4;
+constexpr int _desired_channels = 4;
 }
 
 void import_stbimage(const std::filesystem::path& stbimage_path, editor_project& project)
@@ -20,13 +21,15 @@ void import_stbimage(const std::filesystem::path& stbimage_path, editor_project&
     stbi_uc* _pixels_data_ptr = stbi_load(stbimage_path.string().c_str(), &_source_width, &_source_height, &_source_channels, _desired_channels);
 
     if (!_pixels_data_ptr) {
-        const char* reason = stbi_failure_reason();
-        throw std::runtime_error("stb_image failed to load " + stbimage_path.string() + ": " + (reason ? reason : "unknown error"));
+        const char* _reason = stbi_failure_reason();
+        log_error("Import", "Failed to load " + stbimage_path.string() + " with " + (_reason ? _reason : "unknown error"));
+        return;
     }
 
     if (_source_width <= 0 || _source_height <= 0 || _source_width > 65535 || _source_height > 65535) {
         stbi_image_free(_pixels_data_ptr);
-        throw std::runtime_error("Unsupported image dimensions for " + stbimage_path.string() + ": " + std::to_string(_source_width) + "x" + std::to_string(_source_height));
+        log_error("Import", "Unsupported image dimensions from " + stbimage_path.string() + " with " + std::to_string(_source_width) + "x" + std::to_string(_source_height));
+        return;
     }
 
     pspedit::image_object _image = project.images.default_object ? project.images.default_object.value() : pspedit::image_object(); // TODO HANDLE DEFAULTS
