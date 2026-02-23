@@ -21,6 +21,7 @@ void draw_header()
 
         if (ImGui::BeginMenu("Import")) {
             // TODO
+            ImGui::EndMenu();
         }
 
         if (ImGui::BeginMenu("Build")) {
