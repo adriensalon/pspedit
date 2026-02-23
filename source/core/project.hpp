@@ -41,8 +41,9 @@ struct editor_project {
     object_database<pspedit::script_object> scripts = {};
 };
 
-void load_from_project_file(const std::filesystem::path& project_directory);
-void save_to_project_file(const std::filesystem::path& project_directory);
+void open_directory(const std::filesystem::path& project_directory);
+[[nodiscard]] std::optional<std::filesystem::path> project_directory();
+void save_all();
 void emplace_image(const pspedit::image_object& image, const std::string& editor_name, const std::optional<std::filesystem::path>& import_path);
 void erase_image(const pspedit::image_object& image, const std::string& editor_name, const std::optional<std::filesystem::path>& import_path);
 void reimport_from_dwarf_file();

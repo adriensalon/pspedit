@@ -1,15 +1,23 @@
 #include <imgui.h>
 
-#include <view/view.hpp>
+#include <core/project.hpp>
+#include <view/3dview.hpp>
+#include <view/browser.hpp>
 #include <view/console.hpp>
 #include <view/header.hpp>
-#include <view/3dview.hpp>
 #include <view/inspector.hpp>
-#include <view/browser.hpp>
+#include <view/view.hpp>
 
 std::string window_title()
 {
-    return "PSPEdit (no project loaded)";
+    const std::optional<std::filesystem::path> _project_directory = project_directory();
+    std::string _title = "PSPEdit";
+    if (_project_directory) {
+        _title += " [" + _project_directory.value().string() + "]";
+    } else {
+        _title += " [no open project]";
+    }
+    return _title;
 }
 
 void draw_view()

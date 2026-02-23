@@ -46,8 +46,6 @@ static void _draw_log_category(const std::vector<console_info>& infos, const ImV
 
 void draw_console()
 {
-    log_error("Import", "This is a test error");
-
     if (!ImGui::Begin("Console")) {
         ImGui::End();
         return;
