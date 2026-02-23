@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 project(pspedit)
 
 
-set(BUILD_DWARFDUMP OFF)
+
 add_subdirectory(external/libdwarf)
 if(MSVC)
     # target_compile_definitions(C4090)
