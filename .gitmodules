@@ -4,3 +4,12 @@
 [submodule "external/pspeditrt"]
 	path = external/pspeditrt
 	url = https://github.com/adriensalon/pspeditrt
+[submodule "external/assimp"]
+	path = external/assimp
+	url = https://github.com/assimp/assimp
+[submodule "external/glfw"]
+	path = external/glfw
+	url = https://github.com/glfw/glfw
+[submodule "external/imgui"]
+	path = external/imgui
+	url = https://github.com/ocornut/imgui
