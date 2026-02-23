@@ -9,7 +9,7 @@ if(MSVC)
 endif()
 
 file(GLOB_RECURSE pspedit_editor_sources "source/editor/*.cpp")
-add_executable(pspedit ${pspedit_editor_sources} ".dev/main.cpp")
+add_executable(pspedit ${pspedit_editor_sources})
 target_include_directories(pspedit PRIVATE "source")
 target_link_libraries(pspedit PRIVATE dwarf)
 set_target_properties(pspedit PROPERTIES CXX_STANDARD 17)
