@@ -1,4 +1,7 @@
-#include <editor/toolchain/ppsspp.hpp>
+#include <optional>
+
+#include <editor/core/ppsspp.hpp>
+#include <editor/core/tool.hpp>
 
 #ifndef _WIN32
 #include <sys/wait.h>
@@ -60,8 +63,9 @@ namespace {
 
                 for (const char* _ppsspp_name : _ppsspp_names) {
                     const std::filesystem::path _ppsspp_path = _env_directory / _ppsspp_name;
-                    if (std::filesystem::exists(_ppsspp_path, _error))
+                    if (std::filesystem::exists(_ppsspp_path, _error)) {
                         return p;
+                    }
                 }
             }
         }
@@ -89,10 +93,10 @@ namespace {
             }
         }
 
-        const std::filesystem::path roots[] = { "/usr/bin", "/usr/local/bin", "/snap/bin" };
-        for (const auto& root : roots) {
+        const std::filesystem::path _root_paths[] = { "/usr/bin", "/usr/local/bin", "/snap/bin" };
+        for (const std::filesystem::path& _root_path : _root_paths) {
             for (const char* exe : _ppsspp_names) {
-                std::filesystem::path _ppsspp_path = root / exe;
+                std::filesystem::path _ppsspp_path = _root_path / exe;
                 if (std::filesystem::exists(_ppsspp_path, _error)) {
                     return _ppsspp_path;
                 }
@@ -103,38 +107,30 @@ namespace {
         return std::nullopt;
     }
 
+    static std::optional<std::filesystem::path> _ppsspp_executable = std::nullopt;
 }
 
-ppsspp_manager::ppsspp_manager(const ppsspp_configuration& configuration)
-    : _configuration(configuration)
+bool is_ppsspp_found()
 {
+    if (!_ppsspp_executable) {
+        _ppsspp_executable = _find_ppsspp_executable();
+    }
+    return _ppsspp_executable.has_value();
 }
 
-ppsspp_info ppsspp_manager::probe_info() const
+void launch_ppsspp_game(const std::filesystem::path& game_directory, const std::vector<std::string>& arguments)
 {
-    const std::optional<std::filesystem::path> _executable = _find_ppsspp_executable();
-
-    ppsspp_info _info;
-    _info.is_executable_found = _executable.has_value();
-    _info.executable = _executable ? _executable.value() : "";
-
-    return _info;
-}
-
-tool_result ppsspp_manager::launch_game(const std::filesystem::path& game_directory, const std::vector<std::string>& arguments) const
-{
-    const ppsspp_info _info = probe_info();
-    if (!_info.is_executable_found) {
-        tool_result _result;
-        _result.exit_code = 1;
-        _result.stderr_text = "PPSSPP executable not found";
-        return _result;
+    if (!_ppsspp_executable) {
+        // send error message
+        return;
     }
 
-    std::vector<std::string> _arguments = arguments;
+    std::vector<std::string> _arguments = {};
     _arguments.push_back(game_directory.string());
-
-    return run_capture_combined(_info.executable.string(), _arguments);
+    for (const std::string& _argument : arguments) {
+        _arguments.push_back(_argument);
+    }
+    const tool_result _result = run_capture_combined(_ppsspp_executable.value().string(), _arguments);
 }
 
 }

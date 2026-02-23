@@ -1,23 +1,9 @@
 #pragma once
 
-#include <functional>
-#include <optional>
 #include <string>
 #include <vector>
 
 namespace pspedit {
-
-struct tool_diagnostic {
-    std::string summary;
-    std::string detail;
-};
-
-struct tool_progress {
-    std::optional<float> fraction = std::nullopt;
-    std::string message;
-};
-
-using tool_progress_callback = std::function<void(const tool_progress&)>;
 
 struct tool_result {
     int exit_code = -1;
