@@ -2,11 +2,12 @@
 
 #include <core/docker.hpp>
 #include <core/log.hpp>
+#include <core/ppsspp.hpp>
 #include <core/project.hpp>
 
 namespace {
 
-[[nodiscard]] bool _ensure_directory(const std::filesystem::path directory)
+[[nodiscard]] bool _ensure_directory(const std::filesystem::path& directory)
 {
     if (!std::filesystem::is_directory(directory)) {
         if (!std::filesystem::create_directory(directory)) {
@@ -18,7 +19,7 @@ namespace {
     return true;
 }
 
-[[nodiscard]] bool _generate_cmake_file(const std::filesystem::path source_directory)
+[[nodiscard]] bool _generate_cmake_file(const std::filesystem::path& source_directory)
 {
     const std::string _cmake_text = "cmake_minimum_required(VERSION 3.20) \n"
                                     "project(pspengine_game) \n"
@@ -36,6 +37,20 @@ namespace {
         return false;
     }
 
+    return true;
+}
+
+[[nodiscard]] bool _install_game_executable(const std::filesystem::path& build_directory, const std::filesystem::path& install_directory)
+{
+    const std::filesystem::path _eboot_build_path = build_directory / "pspeditrt" / "EBOOT.PBP";
+    const std::filesystem::path _eboot_install_path = install_directory / "EBOOT.PBP";
+
+    if (!std::filesystem::copy_file(_eboot_build_path, _eboot_install_path, std::filesystem::copy_options::overwrite_existing)) {
+        log_error("Install", "Failed to install " + _eboot_install_path.string());
+        return false;
+    }
+
+    log_message("Install", "Installed " + _eboot_install_path.string());
     return true;
 }
 
@@ -77,7 +92,7 @@ void build_and_run()
     const std::filesystem::path _containers_directory = _cache_directory / "containers";
     const std::filesystem::path _source_directory = _cache_directory / "source";
     const std::filesystem::path _build_directory = _cache_directory / "build";
-    
+
     if (!_ensure_directory(_install_directory)) {
         return;
     }
@@ -99,6 +114,10 @@ void build_and_run()
     if (!docker_build_project(_source_directory, _build_directory)) {
         return;
     }
-
-    // install 
+    if (!_install_game_executable(_build_directory, _install_directory)) {
+        return;
+    }
+    if (!launch_ppsspp_game(_install_directory)) {
+        return;
+    }
 }
