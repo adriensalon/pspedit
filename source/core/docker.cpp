@@ -7,6 +7,9 @@
 
 namespace {
 
+static constexpr const char* _pspdev_docker_image = "pspdev/pspdev:latest";
+static bool _is_docker_installed = false;
+
 [[nodiscard]] static std::string _normalize_newline(const std::string& unformatted)
 {
     std::string _formatted = trim(unformatted);
@@ -17,12 +20,7 @@ namespace {
     return trim(_formatted);
 }
 
-static constexpr const char* _pspdev_docker_image = "pspdev/pspdev:latest";
-static bool _is_docker_installed = false;
-
-}
-
-bool ensure_docker_ready()
+[[nodiscard]] static bool _ensure_docker_installed()
 {
     if (!_is_docker_installed) {
         const tool_result _version_result = run_capture_combined("docker", { "--version" });
@@ -35,7 +33,11 @@ bool ensure_docker_ready()
         }
         _is_docker_installed = true;
     }
+    return true;
+}
 
+[[nodiscard]] static bool _ensure_docker_reachable()
+{
     const tool_result _reachable_result = run_capture_combined("docker", { "info" });
     if (_reachable_result.exit_code != 0) {
         log_error("Build", "Docker not running please start the engine");
@@ -45,7 +47,11 @@ bool ensure_docker_ready()
         const std::string _docker_engine_version = _normalize_newline(_docker_engine_version_result.stdout_text);
         log_message("Build", "Found Docker engine running with version " + _docker_engine_version);
     }
+    return true;
+}
 
+[[nodiscard]] static bool _ensure_docker_image_pulled()
+{
     tool_result _inspect_result = run_capture_combined("docker", { "image", "inspect", _pspdev_docker_image, "--format", "{{.Id}}|{{.Created}}|{{.Size}}" });
     if (_inspect_result.exit_code != 0) {
         const tool_result _pull_result = run_capture_combined("docker", { "pull", _pspdev_docker_image });
@@ -64,10 +70,68 @@ bool ensure_docker_ready()
     std::getline(_inspect_line_stream, _image_size, '|');
     const std::string _formatted_size = std::to_string(std::stoull(trim(_image_size)) / static_cast<std::size_t>(1e6)) + "Mb";
     log_message("Build", "Found Docker image from " + std::string(_pspdev_docker_image) + " (" + _formatted_size + ")");
-
     return true;
 }
 
+}
+
+bool docker_build_project(const std::filesystem::path& source_directory, const std::filesystem::path& build_directory)
+{
+    if (!_ensure_docker_installed()) {
+        return false;
+    }
+    if (!_ensure_docker_reachable()) {
+        return false;
+    }
+    if (!_ensure_docker_image_pulled()) {
+        return false;
+    }
+
+    // Ensure absolute paths for docker bind mounts
+    const auto src_abs = std::filesystem::absolute(source_directory);
+    const auto bld_abs = std::filesystem::absolute(build_directory);
+
+    // Make sure build dir exists on host
+    std::error_code ec;
+    std::filesystem::create_directories(bld_abs, ec);
+
+    // Container mount points
+    const std::string src_mnt = "/source";
+    const std::string bld_mnt = "/build";
+
+    // Script: clone if missing, then configure + build
+    const std::string script = "set -e; "
+                               "export PSPDEV=/usr/local/pspdev; "
+                               "export PATH=\"$PATH:$PSPDEV/bin\"; "
+
+                               // clone pspeditrt if missing
+                               "if [ ! -d /source/pspeditrt/.git ]; then "
+                               "  rm -rf /source/pspeditrt; "
+                               "  git clone --depth 1 https://github.com/adriensalon/pspeditrt /source/pspeditrt; "
+                               "fi; "
+
+                               // build with psp-cmake
+                               "command -v psp-cmake >/dev/null || { echo \"psp-cmake not found; PATH=$PATH\"; exit 127; }; "
+                               "psp-cmake -S /source -B /build -DBUILD_PRX=1 -DENC_PRX=1; "
+                               "cmake --build /build; ";
+
+    std::vector<std::string> args = {
+        "run", "--rm",
+        "-v", src_abs.generic_string() + ":/source",
+        "-v", bld_abs.generic_string() + ":/build",
+        _pspdev_docker_image,
+        "sh", "-lc", script
+    };
+
+    tool_result r = run_capture_combined("docker", args);
+    if (r.exit_code != 0) {
+        log_error("Build", "Docker build failed: " + r.stdout_text);
+        return false;
+    }
+
+    log_message("Build", "Built EBOOT.pbp from Docker image" + std::string(_pspdev_docker_image));
+    return true;
+}
 
 // tool_result editor_docker::run_command(const editor_docker_command& command, const tool_progress_callback& callback) const
 // {

@@ -2,4 +2,4 @@
 
 #include <filesystem>
 
-[[nodiscard]] bool ensure_docker_ready();
+[[nodiscard]] bool docker_build_project(const std::filesystem::path& source_directory, const std::filesystem::path& build_directory);
