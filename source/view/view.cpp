@@ -10,10 +10,9 @@
 
 std::string window_title()
 {
-    const std::optional<std::filesystem::path> _project_directory = project_directory();
     std::string _title = "PSPEdit";
-    if (_project_directory) {
-        _title += " [" + _project_directory.value().string() + "]";
+    if (current_project) {
+        _title += " [" + current_project->directory.string() + "]";
     } else {
         _title += " [no open project]";
     }

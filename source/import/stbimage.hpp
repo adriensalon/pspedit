@@ -1,5 +1,5 @@
 #pragma once
 
-#include <core/project.hpp>
+#include <filesystem>
 
-void import_stbimage(const std::filesystem::path& stbimage_path, editor_project& project);
+void import_stbimage(const std::filesystem::path& stbimage_path);

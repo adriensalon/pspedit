@@ -39,10 +39,12 @@ struct editor_project {
     object_database<pspedit::transform_object> transforms = {};
     object_database<pspedit::scene_object> scenes = {};
     object_database<pspedit::script_object> scripts = {};
+    std::filesystem::path directory = {};
 };
 
+inline std::optional<editor_project> current_project = std::nullopt;
+
 void open_directory(const std::filesystem::path& project_directory);
-[[nodiscard]] std::optional<std::filesystem::path> project_directory();
 void save_all();
 void build_and_run();
 

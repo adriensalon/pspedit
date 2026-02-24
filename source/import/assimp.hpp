@@ -1,5 +1,5 @@
 #pragma once
 
-#include <editor/core/project.hpp>
+#include <filesystem>
 
-void import_assimp(const std::filesystem::path& assimp_path, editor_project& project);
+void import_assimp(const std::filesystem::path& assimp_path);

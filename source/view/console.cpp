@@ -58,7 +58,7 @@ void draw_console()
     ImGui::SameLine();
     ImGui::Checkbox("Auto-scroll", &_is_auto_scroll);
     ImGui::SameLine();
-    _filter.Draw("Search", 200.0f);
+    _filter.Draw("Search");
     ImGui::Spacing();
 
     if (ImGui::BeginTabBar("##console_tabs")) {

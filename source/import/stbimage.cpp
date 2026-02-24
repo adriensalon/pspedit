@@ -7,6 +7,7 @@
 #include <stb_image_resize2.h>
 
 #include <core/log.hpp>
+#include <core/project.hpp>
 #include <import/stbimage.hpp>
 
 namespace {
@@ -14,8 +15,13 @@ namespace {
 constexpr int _desired_channels = 4;
 }
 
-void import_stbimage(const std::filesystem::path& stbimage_path, editor_project& project)
+void import_stbimage(const std::filesystem::path& stbimage_path)
 {
+    if (!current_project) {
+        log_error("Import", "Failed to import no project loaded");
+        return;
+    }
+
     stbi_set_flip_vertically_on_load(0);
     int _source_width = 0, _source_height = 0, _source_channels = 0;
     stbi_uc* _pixels_data_ptr = stbi_load(stbimage_path.string().c_str(), &_source_width, &_source_height, &_source_channels, _desired_channels);
@@ -32,7 +38,7 @@ void import_stbimage(const std::filesystem::path& stbimage_path, editor_project&
         return;
     }
 
-    pspedit::image_object _image = project.images.default_object ? project.images.default_object.value() : pspedit::image_object(); // TODO HANDLE DEFAULTS
+    pspedit::image_object _image = current_project->images.default_object ? current_project->images.default_object.value() : pspedit::image_object(); // TODO HANDLE DEFAULTS
     const pspedit::u32 _bytes_per_pixel = _desired_channels;
     const std::size_t _byte_count = static_cast<std::size_t>(_source_width) * static_cast<std::size_t>(_source_height) * _bytes_per_pixel;
     _image.stride_width = static_cast<pspedit::u32>(_source_width) * _bytes_per_pixel;
@@ -46,6 +52,10 @@ void import_stbimage(const std::filesystem::path& stbimage_path, editor_project&
     std::memcpy(_image.pixels.data(), _pixels_data_ptr, _byte_count);
     stbi_image_free(_pixels_data_ptr);
 
-    const std::string _editor_name = stbimage_path.filename().replace_extension().string();
-    // project.emplace_image(_image, _editor_name, stbimage_path);
+    object_database_entry<pspedit::image_object>& _image_entry = current_project->images.entries.emplace_back();
+    _image_entry.editor_name = stbimage_path.filename().replace_extension().string();
+    _image_entry.import_path = stbimage_path;
+    _image_entry.content_entry.id = { 4444 }; // TODO GENERATE
+    _image_entry.content_entry.path = current_project->directory / (std::to_string(_image_entry.content_entry.id.value) + ".asset");
+    _image_entry.save_object(_image);
 }

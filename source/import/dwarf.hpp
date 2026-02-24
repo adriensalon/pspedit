@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/project.hpp>
+#include <filesystem>
 
-void import_dwarf(const std::filesystem::path& dwarf_path, object_database<pspedit::script_object>& scripts);
+void import_dwarf(const std::filesystem::path& dwarf_path);
 

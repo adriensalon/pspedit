@@ -54,9 +54,22 @@ namespace {
     return true;
 }
 
-static std::optional<std::filesystem::path> _project_directory = std::nullopt;
+}
+
+template <typename Object>
+Object object_database_entry<Object>::load_object() const
+{
 
 }
+
+template <typename Object>
+void object_database_entry<Object>::save_object(const Object& object) const
+{
+
+}
+
+template void object_database_entry<pspedit::image_object>::save_object(const pspedit::image_object& object) const;
+template void object_database_entry<pspedit::material_object>::save_object(const pspedit::material_object& object) const;
 
 void open_directory(const std::filesystem::path& project_directory)
 {
@@ -68,12 +81,9 @@ void open_directory(const std::filesystem::path& project_directory)
     // TODO project file .pspeditor
 
     log_message("Project", "Loaded project from directory " + project_directory.string());
-    _project_directory = project_directory;
-}
-
-std::optional<std::filesystem::path> project_directory()
-{
-    return _project_directory;
+    current_project.reset();
+    current_project = editor_project();
+    current_project->directory = project_directory;
 }
 
 void save_all()
@@ -82,13 +92,13 @@ void save_all()
 
 void build_and_run()
 {
-    if (!_project_directory) {
+    if (!current_project) {
         log_error("Build", "Failed to start build no project loaded");
         return;
     }
 
-    const std::filesystem::path _install_directory = _project_directory.value() / "install";
-    const std::filesystem::path _cache_directory = _project_directory.value() / "cache";
+    const std::filesystem::path _install_directory = current_project->directory / "install";
+    const std::filesystem::path _cache_directory = current_project->directory / "cache";
     const std::filesystem::path _containers_directory = _cache_directory / "containers";
     const std::filesystem::path _source_directory = _cache_directory / "source";
     const std::filesystem::path _build_directory = _cache_directory / "build";
