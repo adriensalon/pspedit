@@ -28,3 +28,6 @@
 [submodule "external/entt"]
 	path = external/entt
 	url = https://github.com/skypjack/entt
+[submodule "external/libpspexploit"]
+	path = external/libpspexploit
+	url = https://github.com/PSP-Archive/LibPspExploit
