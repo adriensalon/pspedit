@@ -248,4 +248,45 @@ if(MSVC)
     target_compile_options(libusb PRIVATE /wd5287)
 endif()
 
-add_subdirectory(source/editor)
+
+
+
+
+
+
+
+
+
+# set(SOURCE_ZIP_STAGE "${CMAKE_BINARY_DIR}/source_zip_stage")
+# set(SOURCE_ZIP      "${CMAKE_BINARY_DIR}/sources.zip")
+
+# add_custom_command(
+#   OUTPUT "${SOURCE_ZIP}"
+#   COMMAND "${CMAKE_COMMAND}" -E tar "cf" "${SOURCE_ZIP}" --format=zip -- "${CMAKE_CURRENT_LIST_DIR}/source/runtime"
+#   DEPENDS ${PROJECT_SOURCES}
+#   VERBATIM
+# )
+
+# add_custom_target(package_sources ALL DEPENDS "${SOURCE_ZIP}")
+
+# set(EMB_CPP "${CMAKE_BINARY_DIR}/embedded_sources.cpp")
+# set(EMB_H   "${CMAKE_BINARY_DIR}/embedded_sources.h")
+# set(EMB_SYM "g_sources_zip")
+
+# add_custom_command(
+#   OUTPUT "${EMB_CPP}" "${EMB_H}"
+#   COMMAND "${CMAKE_COMMAND}"
+#           -DINPUT="${SOURCE_ZIP}"
+#           -DOUT_CPP="${EMB_CPP}"
+#           -DOUT_H="${EMB_H}"
+#           -DSYM="${EMB_SYM}"
+#           -P "${CMAKE_SOURCE_DIR}/cmake/embed_file.cmake"
+#   DEPENDS "${SOURCE_ZIP}" "${CMAKE_SOURCE_DIR}/cmake/embed_file.cmake"
+#   VERBATIM
+# )
+
+# add_library(embedded_zip OBJECT "${EMB_CPP}")
+# add_dependencies(embedded_zip package_sources)
+# target_include_directories(embedded_zip PUBLIC "${CMAKE_BINARY_DIR}")
+
+# add_subdirectory(source/editor)

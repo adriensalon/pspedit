@@ -16,9 +16,6 @@
 [submodule "external/nfd"]
 	path = external/nfd
 	url = https://github.com/mlabbe/nativefiledialog
-[submodule "external/psplinkusb"]
-	path = external/psplinkusb
-	url = https://github.com/pspdev/psplinkusb
 [submodule "external/libusb"]
 	path = external/libusb
 	url = https://github.com/libusb/libusb
