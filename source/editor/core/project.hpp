@@ -4,13 +4,13 @@
 #include <optional>
 #include <vector>
 
-#include <pspedit/core/content.hpp>
-#include <pspedit/core/image.hpp>
-#include <pspedit/core/material.hpp>
-#include <pspedit/core/mesh.hpp>
-#include <pspedit/core/scene.hpp>
-#include <pspedit/core/script.hpp>
-#include <pspedit/core/transform.hpp>
+#include <core/content.hpp>
+#include <core/image.hpp>
+#include <core/material.hpp>
+#include <core/mesh.hpp>
+#include <core/scene.hpp>
+#include <core/script.hpp>
+#include <core/transform.hpp>
 
 enum struct project_run_target {
     ppsspp_emulator,

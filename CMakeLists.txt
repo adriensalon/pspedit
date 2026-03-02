@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.20)
 project(pspedit)
 
-
-
+# libdwarf
+option(BUILD_DWARFDUMP OFF)
 add_subdirectory(external/libdwarf)
 if(MSVC)
-    # target_compile_definitions(C4090)
+    target_compile_options(dwarf PRIVATE /wd4090)
 endif()
 
 # glfw
@@ -244,15 +244,8 @@ else()
     endif()
 endif()
 target_include_directories(libusb PUBLIC "external/libusb/libusb")
+if(MSVC)
+    target_compile_options(libusb PRIVATE /wd5287)
+endif()
 
-
-
-# pspeditrt
-add_library(pspeditrt INTERFACE)
-target_include_directories(pspeditrt INTERFACE "external/pspeditrt/include")
-
-file(GLOB_RECURSE pspedit_editor_sources "source/*.cpp")
-add_executable(pspedit ${pspedit_editor_sources})
-target_include_directories(pspedit PRIVATE "source")
-target_link_libraries(pspedit PRIVATE libusb dwarf glfw imgui nfd stb pspeditrt)
-set_target_properties(pspedit PROPERTIES CXX_STANDARD 17)
+add_subdirectory(source/editor)
