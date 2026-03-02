@@ -1,9 +1,6 @@
 [submodule "external/libdwarf"]
 	path = external/libdwarf
 	url = https://github.com/davea42/libdwarf-code.git
-[submodule "external/pspeditrt"]
-	path = external/pspeditrt
-	url = https://github.com/adriensalon/pspeditrt
 [submodule "external/assimp"]
 	path = external/assimp
 	url = https://github.com/assimp/assimp
@@ -19,3 +16,15 @@
 [submodule "external/nfd"]
 	path = external/nfd
 	url = https://github.com/mlabbe/nativefiledialog
+[submodule "external/psplinkusb"]
+	path = external/psplinkusb
+	url = https://github.com/pspdev/psplinkusb
+[submodule "external/libusb"]
+	path = external/libusb
+	url = https://github.com/libusb/libusb
+[submodule "external/cereal"]
+	path = external/cereal
+	url = https://github.com/USCiLab/cereal
+[submodule "external/entt"]
+	path = external/entt
+	url = https://github.com/skypjack/entt
