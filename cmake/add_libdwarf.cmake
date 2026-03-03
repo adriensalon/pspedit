@@ -1,0 +1,8 @@
+function(add_libdwarf SOURCE_DIR BINARY_DIR)
+	option(BUILD_DWARFDUMP OFF)
+	add_subdirectory(${SOURCE_DIR} ${BINARY_DIR})
+	if(MSVC)
+		target_compile_options(dwarf PRIVATE /wd4090)
+		set_target_properties(dwarf PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${BINARY_DIR})
+	endif()
+endfunction()

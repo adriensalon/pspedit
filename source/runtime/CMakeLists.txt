@@ -1,4 +1,3 @@
-# runtime
 add_executable(pspedirt "source/entry.cpp")
 set_property(TARGET pspedirt PROPERTY CXX_STANDARD 17)
 target_link_libraries(pspedirt PRIVATE pspdebug pspkernel pspgu pspge pspdisplay pspctrl psprtc)

@@ -104,15 +104,17 @@ bool docker_build_project(const std::filesystem::path& source_directory, const s
                                "export PSPDEV=/usr/local/pspdev; "
                                "export PATH=\"$PATH:$PSPDEV/bin\"; "
 
-                               // clone pspeditrt if missing
-                               "if [ ! -d /source/pspeditrt/.git ]; then "
-                               "  rm -rf /source/pspeditrt; "
-                               "  git clone --depth 1 https://github.com/adriensalon/pspeditrt /source/pspeditrt; "
+							   // TODO ENTT & CEREAL
+
+                               // clone pspedit if missing
+                               "if [ ! -d /source/pspedit/.git ]; then "
+                               "  rm -rf /source/pspedit; "
+                               "  git clone --depth 1 https://github.com/adriensalon/pspedit /source/pspedit; "
                                "fi; "
 
                                // build with psp-cmake
                                "command -v psp-cmake >/dev/null || { echo \"psp-cmake not found; PATH=$PATH\"; exit 127; }; "
-                               "psp-cmake -S /source -B /build -DBUILD_PRX=1 -DENC_PRX=1; "
+                               "psp-cmake -S /source -B /build -DBUILD_PRX=1 -DENC_PRX=1 -DPSPEDIT_BUILD_GAME=1; "
                                "cmake --build /build; ";
 
     std::vector<std::string> args = {

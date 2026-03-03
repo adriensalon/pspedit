@@ -22,8 +22,8 @@ namespace {
 [[nodiscard]] bool _generate_cmake_file(const std::filesystem::path& source_directory)
 {
     const std::string _cmake_text = "cmake_minimum_required(VERSION 3.20) \n"
-                                    "project(pspengine_game) \n"
-                                    "add_subdirectory(pspeditrt)";
+                                    "project(pspedit_game) \n"
+                                    "add_subdirectory(pspedit)";
 
     const std::filesystem::path _cmake_path = source_directory / "CMakeLists.txt";
     std::ofstream _cmake_stream(_cmake_path, std::ios::binary);
