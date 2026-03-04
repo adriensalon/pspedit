@@ -3,6 +3,8 @@
 #include <pspgu.h>
 #include <pspkernel.h>
 
+#include <platform/psp/kernel.hpp>
+
 PSP_MODULE_INFO("pspedit_game", 0, 1, 0);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
 
@@ -27,9 +29,36 @@ int _callback_thread(SceSize args, void* argp)
     return 0;
 }
 
+void _load_and_start_module(pspedit::kernel_context& context, const char* path)
+{
+    const SceUID _module_id = context.load_module(path, 0, NULL);
+    if (_module_id < 0) {
+        pspDebugScreenPrintf("Failed to load %s module\n", path);
+        return;
+    }
+
+    int status;
+    if (context.start_module(_module_id, 0, NULL, &status, NULL) < 0) {
+        pspDebugScreenPrintf("Failed to start %s module\n", path);
+    }
+
+    pspDebugScreenPrintf("Loaded and started module %s\n", path);
+}
+
 int main()
 {
     pspDebugScreenInit();
+
+	pspedit::kernel_xploiter _xploiter;
+	_xploiter.run_kernel([] (pspedit::kernel_context& context) {
+		_load_and_start_module(context, "flash0:/kd/semawm.prx");
+		_load_and_start_module(context, "flash0:/kd/usbstor.prx");
+		_load_and_start_module(context, "flash0:/kd/usbstormgr.prx");
+		_load_and_start_module(context, "flash0:/kd/usbstorms.prx");
+
+		context.delay_thread(4e3);
+	});
+
 
     const int _thread_id = sceKernelCreateThread("update_thread", _callback_thread, 0x11, 0xFA0, 0, 0);
     if (_thread_id >= 0) {
