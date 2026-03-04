@@ -1,29 +1,37 @@
 #pragma once
 
+#include <cstddef>
+#include <cstdint>
 #include <memory>
+#include <utility>
 
 namespace pspedit {
 
-struct vram_object {
-    vram_object(const std::size_t total_bytes = 0);
-    vram_object(const vram_object& other) = delete;
-    vram_object& operator=(const vram_object& other) = delete;
-    vram_object(vram_object&& other) = default;
-    vram_object& operator=(vram_object&& other) = default;
-    ~vram_object();
+struct vram_allocator {
+    vram_allocator();
+    vram_allocator(const vram_allocator& other) = delete;
+    vram_allocator& operator=(const vram_allocator& other) = delete;
+    vram_allocator(vram_allocator&& other) = default;
+    vram_allocator& operator=(vram_allocator&& other) = default;
 
-    [[nodiscard]] void* allocate(const std::size_t bytes, const std::size_t align = 16);
-    [[nodiscard]] std::size_t mark() const noexcept;
-    void reset(const std::size_t marker) noexcept;
-    [[nodiscard]] void* base() const noexcept;
-    [[nodiscard]] std::size_t size() const noexcept;
-    [[nodiscard]] std::size_t used() const noexcept;
-    [[nodiscard]] std::size_t available() const noexcept;
-    [[nodiscard]] std::size_t offset_of(address ptr) const noexcept;
+	static void dcache_writeback(const void* pointer, const std::size_t bytes);
+	static void dcache_invalidate(const void* pointer, const std::size_t bytes);
+
+    void reset();
+    [[nodiscard]] void* allocate(const std::size_t bytes, const std::size_t alignment = 16);
+    [[nodiscard]] std::size_t size_bytes() const noexcept;
+    [[nodiscard]] std::size_t used_bytes() const noexcept;
+
+    template <typename T>
+    [[nodiscard]] T* allocate_typed(const std::size_t count = 1, const std::size_t alignment = alignof(T))
+    {
+        return static_cast<T*>(allocate(sizeof(T) * count, std::max(alignment, std::size_t(16))));
+    }
 
 private:
-    struct vram_object_implementation;
-    std::shared_ptr<vram_object_implementation> _implementation;
+    std::uint8_t* _base;
+    std::size_t _size;
+    std::size_t _head;
 };
 
 }

@@ -1,11 +1,20 @@
-add_executable(pspedirt "source/entry.cpp")
-set_property(TARGET pspedirt PROPERTY CXX_STANDARD 17)
-target_link_libraries(pspedirt PRIVATE pspdebug pspkernel pspgu pspge pspdisplay pspctrl psprtc)
+cmake_minimum_required(VERSION 3.20)
+project(pspedit_runtime)
+
+
+
+
+
+file(GLOB_RECURSE pspedit_runtime_sources "*.cpp")
+add_executable(pspedit_runtime ${pspedit_runtime_sources})
+set_property(TARGET pspedit_runtime PROPERTY CXX_STANDARD 17)
+target_include_directories(pspedit_runtime PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+target_link_libraries(pspedit_runtime PRIVATE pspexploit pspdebug pspkernel pspgu pspge pspdisplay pspctrl psprtc)
 
 create_pbp_file(
-    TARGET pspedirt
+    TARGET pspedit_runtime
     ICON_PATH NULL
     BACKGROUND_PATH NULL
     PREVIEW_PATH NULL
-    TITLE pspedirt
+    TITLE pspedit_runtime
     VERSION 01.00)
