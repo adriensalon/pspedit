@@ -23,9 +23,40 @@ graphics_context::~graphics_context()
 
 void graphics_context::begin_frame(const render_target& target)
 {
-	sceGuStart(GU_DIRECT, _command_list);
+    sceGuStart(GU_DIRECT, _command_list);
     bind_render_target(target);
-	setup_viewport(target);
+    setup_viewport(target);
+}
+
+void graphics_context::end_frame()
+{
+    finish_and_sync();
+    swap_buffers();
+}
+
+void graphics_context::clear(const u32 clear_flags, const u32 color, const f32 depth, const u32 stencil)
+{
+    sceGuClearColor(color);
+    sceGuClearDepth(static_cast<int>(depth * 0xFFFF)); // GU depth is typically 16-bit
+    sceGuClearStencil(stencil);
+    sceGuClear(clear_flags);
+}
+
+void graphics_context::bind_render_target(const render_target& target)
+{
+    sceGuDrawBuffer(static_cast<int>(target.format), target.draw_buffer, static_cast<int>(target.buffer_width));
+    sceGuDispBuffer(static_cast<int>(target.width), static_cast<int>(target.height), target.display_buffer, static_cast<int>(target.buffer_width));
+    if (target.depth_buffer) {
+        sceGuDepthBuffer(target.depth_buffer, static_cast<int>(target.buffer_width));
+    }
+}
+
+void graphics_context::setup_viewport(const render_target& target)
+{
+    sceGuOffset(static_cast<int>(target.offset_x), static_cast<int>(target.offset_y));
+    sceGuViewport(2048, 2048, static_cast<int>(target.width), static_cast<int>(target.height));
+    sceGuScissor(0, 0, static_cast<int>(target.width), static_cast<int>(target.height));
+    sceGuEnable(GU_SCISSOR_TEST);
 }
 
 void graphics_context::finish_and_sync()
@@ -38,31 +69,6 @@ void graphics_context::swap_buffers()
 {
     sceDisplayWaitVblankStart();
     sceGuSwapBuffers();
-}
-
-void graphics_context::clear(const u32 clearFlags, const u32 color, const f32 depth, const u32 stencil)
-{
-    sceGuClearColor(color);
-    sceGuClearDepth(static_cast<int>(depth * 0xFFFF)); // GU depth is typically 16-bit
-    sceGuClearStencil(stencil);
-    sceGuClear(clearFlags);
-}
-
-void graphics_context::setup_viewport(const render_target& target)
-{
-    sceGuOffset(target.offsetX, target.offsetY);
-    sceGuViewport(2048, 2048, target.width, target.height);
-    sceGuScissor(0, 0, target.width, target.height);
-    sceGuEnable(GU_SCISSOR_TEST);
-}
-
-void graphics_context::bind_render_target(const render_target& target)
-{
-    sceGuDrawBuffer(target.pixelFormat, target.draw_buffer, target.bufferWidth);
-    sceGuDispBuffer(target.width, target.height, target.display_buffer, target.bufferWidth);
-    if (target.depth_buffer) {
-        sceGuDepthBuffer(target.depth_buffer, target.bufferWidth);
-    }
 }
 
 }

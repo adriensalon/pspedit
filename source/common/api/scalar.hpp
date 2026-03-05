@@ -11,6 +11,7 @@ using u8 = std::uint8_t;
 using u16 = std::uint16_t;
 using u32 = std::uint32_t;
 using u64 = std::uint64_t;
+using b32 = std::int32_t;
 
 using vec2_f32 = std::array<f32, 2>;
 using vec3_f32 = std::array<f32, 3>;
