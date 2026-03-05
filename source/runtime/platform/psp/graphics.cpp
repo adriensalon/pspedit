@@ -42,6 +42,11 @@ void graphics_context::clear(const u32 clear_flags, const u32 color, const f32 d
     sceGuClear(clear_flags);
 }
 
+void bind_pipeline(const pipeline_state& pipeline)
+{
+
+}
+
 void graphics_context::bind_render_target(const render_target& target)
 {
     sceGuDrawBuffer(static_cast<int>(target.format), target.draw_buffer, static_cast<int>(target.buffer_width));

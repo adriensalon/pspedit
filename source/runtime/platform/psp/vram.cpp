@@ -1,5 +1,5 @@
 #include <pspge.h>
-#include <pspkernel.h> // maybe exploit
+#include <pspkernel.h>
 
 #include <platform/psp/vram.hpp>
 

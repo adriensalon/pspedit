@@ -4,6 +4,8 @@
 
 namespace pspedit {
 
+struct pipeline_state;
+
 struct render_target {
     u16 width = 480;
     u16 height = 272;
@@ -27,6 +29,7 @@ struct graphics_context {
     void begin_frame(const render_target& target);
     void end_frame();
     void clear(const u32 clear_flags, const u32 color = 0, const f32 depth = 1.f, const u32 stencil = 0);
+	void bind_pipeline(const pipeline_state& pipeline);
 
 private:
     void bind_render_target(const render_target& target);

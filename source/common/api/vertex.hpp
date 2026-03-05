@@ -1,7 +1,5 @@
 #pragma once
 
-#include <array>
-
 #include <api/scalar.hpp>
 
 namespace pspedit {
