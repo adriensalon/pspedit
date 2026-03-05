@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <chrono>
 #include <fstream>
 #include <memory>
@@ -68,7 +69,7 @@ bool messenger_driver::poll_messages(std::vector<std::string>& messages) noexcep
 
     std::vector<std::filesystem::directory_entry> _inbox_entries;
     const std::filesystem::path _inbox_dir = _inbound_dir / "inbox";
-    for (std::filesystem::directory_entry& _inbox_entry : std::filesystem::directory_iterator(_inbox_dir)) {
+    for (const std::filesystem::directory_entry& _inbox_entry : std::filesystem::directory_iterator(_inbox_dir)) {
         if (!_inbox_entry.is_regular_file()) {
             continue;
         }
@@ -83,7 +84,7 @@ bool messenger_driver::poll_messages(std::vector<std::string>& messages) noexcep
         const std::filesystem::path _inbox_entry_path = _inbox_entry.path();
 
         std::string _message_data;
-        std::unique_ptr<std::ifstream> _fstream_ptr = std::make_unique(_inbox_entry_path, std::ios::binary);
+        std::unique_ptr<std::ifstream> _fstream_ptr = std::make_unique<std::ifstream>(_inbox_entry_path, std::ios::binary);
         if (_fstream_ptr->fail()) {
             continue;
         }
@@ -118,13 +119,13 @@ bool messenger_driver::send_message(const std::string& message) noexcept
     const std::string _message_name = _make_name(_seq_id);
     const std::filesystem::path _message_temp_path = _outbound_dir / "temp" / (_message_name + ".tmp");
 
-    std::unique_ptr<std::ofstream> _fstream_ptr = std::make_unique(_message_temp_path, std::ios::binary | std::ios::trunc);
+    std::unique_ptr<std::ofstream> _fstream_ptr = std::make_unique<std::ofstream>(_message_temp_path, std::ios::binary | std::ios::trunc);
     if (_fstream_ptr->fail()) {
         return false;
     }
-    _fstream_ptr->write(msg.data(), static_cast<std::streamsize>(msg.size()));
+    _fstream_ptr->write(message.data(), static_cast<std::streamsize>(message.size()));
     _fstream_ptr->flush();
-    if (_fstream_ptr->fail) {
+    if (_fstream_ptr->fail()) {
         return false;
     }
     _fstream_ptr.reset();

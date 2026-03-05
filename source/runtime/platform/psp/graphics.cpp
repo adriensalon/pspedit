@@ -21,9 +21,11 @@ graphics_context::~graphics_context()
     sceGuTerm();
 }
 
-graphics_frame graphics_context::begin_frame(const render_target& target)
+void graphics_context::begin_frame(const render_target& target)
 {
-    return graphics_frame(*this, target);
+	sceGuStart(GU_DIRECT, _command_list);
+    bind_render_target(target);
+	setup_viewport(target);
 }
 
 void graphics_context::finish_and_sync()
@@ -38,7 +40,7 @@ void graphics_context::swap_buffers()
     sceGuSwapBuffers();
 }
 
-void graphics_context::clear(const std::uint32_t clearFlags, const std::uint32_t color, const float depth, const std::uint32_t stencil)
+void graphics_context::clear(const u32 clearFlags, const u32 color, const f32 depth, const u32 stencil)
 {
     sceGuClearColor(color);
     sceGuClearDepth(static_cast<int>(depth * 0xFFFF)); // GU depth is typically 16-bit
