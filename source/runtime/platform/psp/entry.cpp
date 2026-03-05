@@ -3,38 +3,37 @@
 #include <pspgu.h>
 #include <pspkernel.h>
 
-#include <platform/psp/kernel.hpp>
 #include <platform/psp/usb.hpp>
 
 PSP_MODULE_INFO("pspedit_game", 0, 1, 0);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
 
-#define BUFFER_WIDTH 512
-#define SCREEN_WIDTH 480
-#define SCREEN_HEIGHT 272
+// #define BUFFER_WIDTH 512
+// #define SCREEN_WIDTH 480
+// #define SCREEN_HEIGHT 272
 
 // GU command list
-static unsigned int __attribute__((aligned(16))) _gu_command_list[262144];
+// static unsigned int __attribute__((aligned(16))) _gu_command_list[262144];
 
-int _exit_callback(int arg1, int arg2, void* common)
-{
-    sceKernelExitGame();
-    return 0;
-}
+// int _exit_callback(int arg1, int arg2, void* common)
+// {
+//     sceKernelExitGame();
+//     return 0;
+// }
 
-int _callback_thread(SceSize args, void* argp)
-{
-    const int _cbid = sceKernelCreateCallback("exit_callback", _exit_callback, nullptr);
-    sceKernelRegisterExitCallback(_cbid);
-    sceKernelSleepThreadCB();
-    return 0;
-}
+// int _callback_thread(SceSize args, void* argp)
+// {
+//     const int _cbid = sceKernelCreateCallback("exit_callback", _exit_callback, nullptr);
+//     sceKernelRegisterExitCallback(_cbid);
+//     sceKernelSleepThreadCB();
+//     return 0;
+// }
 
 int main()
 {
     pspDebugScreenInit();
 
-    pspedit::run_kernel([](pspedit::kernel_context& context) {
+    pspedit::kernel_run([](pspedit::kernel_context& context) {
         pspedit::kernel_start_usb(context);
 		context.delay_thread(5e7);
 		return true;

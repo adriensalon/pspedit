@@ -53,4 +53,15 @@ bool kernel_start_usb(kernel_context& context)
     return true;
 }
 
+bool kernel_stop_usb(kernel_context& context)
+{
+    _load_and_start_module(context, "flash0:/kd/semawm.prx");
+    _load_and_start_module(context, "flash0:/kd/usbstor.prx");
+    _load_and_start_module(context, "flash0:/kd/usbstormgr.prx");
+    _load_and_start_module(context, "flash0:/kd/usbstorms.prx");
+
+	// TODO
+	return false;
+}
+
 }

@@ -4,10 +4,7 @@ extern "C" {
 #include <libpspexploit.h>
 }
 
-#include <pspmodulemgr.h>
-#include <pspusb.h>
-#include <pspusbbus.h>
-#include <pspusbstor.h>
+#include <pspdebug.h>
 
 #include <platform/psp/kernel.hpp>
 
@@ -68,7 +65,7 @@ namespace {
 
 }
 
-bool run_kernel(const std::function<bool(kernel_context&)>& callback)
+bool kernel_run(const std::function<bool(kernel_context&)>& callback)
 {
     static bool _is_xploiter_setup = false;
     if (!_is_xploiter_setup) {

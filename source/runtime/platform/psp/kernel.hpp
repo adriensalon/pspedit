@@ -18,6 +18,6 @@ struct kernel_context {
     std::function<int(unsigned int delay)> delay_thread = nullptr;
 };
 
-bool run_kernel(const std::function<bool(kernel_context&)>& callback);
+bool kernel_run(const std::function<bool(kernel_context&)>& callback);
 
 }
