@@ -18,13 +18,6 @@ struct kernel_context {
     std::function<int(unsigned int delay)> delay_thread = nullptr;
 };
 
-struct kernel_xploiter {
-    kernel_xploiter() = default;
-	kernel_xploiter(const kernel_xploiter& other) = delete;
-	kernel_xploiter& operator=(const kernel_xploiter& other) = delete;
-	kernel_xploiter(kernel_xploiter&& other) = default;
-	kernel_xploiter& operator=(kernel_xploiter&& other) = default;
+bool run_kernel(const std::function<bool(kernel_context&)>& callback);
 
-    bool run_kernel(const std::function<void(kernel_context&)>& callback);
-};
 }

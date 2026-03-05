@@ -21,7 +21,8 @@ extern "C" {
 namespace pspedit {
 namespace {
 
-    static std::function<void(kernel_context&)> _userland_callback = nullptr;
+    static std::function<bool(kernel_context&)> _userland_callback = nullptr;
+    static bool _userland_result = false;
 
     template <typename Return, typename... Args>
     bool _ensure_function_found(std::function<Return(Args...)>& function_ref, const std::string& module_name, const std::string& library_name, const std::size_t nid)
@@ -57,7 +58,7 @@ namespace {
         _kernel_context.delay_thread = _kernel_functions.KernelDelayThread;
 
         if (_userland_callback) {
-            _userland_callback(_kernel_context);
+            _userland_result = _userland_callback(_kernel_context);
         }
 
         pspXploitRepairKernel();
@@ -67,7 +68,7 @@ namespace {
 
 }
 
-bool kernel_xploiter::run_kernel(const std::function<void(kernel_context&)>& callback)
+bool run_kernel(const std::function<bool(kernel_context&)>& callback)
 {
     static bool _is_xploiter_setup = false;
     if (!_is_xploiter_setup) {
@@ -83,7 +84,7 @@ bool kernel_xploiter::run_kernel(const std::function<void(kernel_context&)>& cal
 
     _userland_callback = callback;
     pspXploitExecuteKernel(reinterpret_cast<void*>(&_kernel_callback));
-    return true;
+    return _userland_result;
 }
 
 }
