@@ -63,7 +63,7 @@ namespace {
         }
     }
 
-    [[nodiscard]] std::size_t _byte_size(const image_descriptor& descriptor)
+    [[nodiscard]] std::size_t _byte_size(const texture_descriptor& descriptor)
     {
         const std::size_t _per_pixel = _bytes_per_pixel(descriptor.format);
         if (_per_pixel == 0 || descriptor.width == 0 || descriptor.height == 0) {
@@ -77,7 +77,7 @@ namespace {
 
 }
 
-texture::texture(vram_allocator& allocator, const image_descriptor& descriptor)
+texture::texture(vram_allocator& allocator, const texture_descriptor& descriptor)
     : _descriptor(descriptor)
 {
     const std::size_t _bytes = _byte_size(_descriptor);
@@ -88,7 +88,7 @@ texture::texture(vram_allocator& allocator, const image_descriptor& descriptor)
     _data = allocator.allocate(_bytes, 16);
 }
 
-texture::texture(vram_allocator& allocator, const image_descriptor& descriptor, const void* pixels)
+texture::texture(vram_allocator& allocator, const texture_descriptor& descriptor, const void* pixels)
     : _descriptor(descriptor)
 {
     const std::size_t _bytes = _byte_size(_descriptor);
@@ -110,7 +110,7 @@ texture::~texture()
     // VRAM is from bump allocator -> no per texture free
 }
 
-void texture::update(vram_allocator& allocator, const image_descriptor& descriptor, const void* pixels)
+void texture::update(vram_allocator& allocator, const texture_descriptor& descriptor, const void* pixels)
 {
     if (!pixels) {
         return;
@@ -163,7 +163,7 @@ b32 texture::is_valid() const noexcept
     return static_cast<b32>(_data != nullptr);
 }
 
-const image_descriptor& texture::descriptor() const noexcept
+const texture_descriptor& texture::descriptor() const noexcept
 {
 	return _descriptor;
 }

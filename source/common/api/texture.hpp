@@ -24,7 +24,7 @@ enum struct texture_wrap : u8 {
     repeat
 };
 
-struct image_descriptor {
+struct texture_descriptor {
     u16 width = 0;
     u16 height = 0;
     u32 stride = 0;
