@@ -46,37 +46,31 @@ framebuffer::framebuffer(vram_allocator& allocator, const framebuffer_descriptor
         return;
     }
 
-    const u32 color_bpp = _bytes_per_pixel(_descriptor.format);
-    if (color_bpp == 0) {
+    const u32 _color_bpp = _bytes_per_pixel(_descriptor.format);
+    if (_color_bpp == 0) {
         return;
     }
 
-    const u32 color_bytes = static_cast<u32>(_descriptor.buffer_width) * static_cast<u32>(_descriptor.height) * color_bpp;
-
-    const u32 depth_bytes = static_cast<u32>(_descriptor.buffer_width) * static_cast<u32>(_descriptor.height) * 2u;
-
-    _draw_buffer = allocator.allocate(color_bytes, 16);
+    const u32 _color_bytes = static_cast<u32>(_descriptor.buffer_width) * static_cast<u32>(_descriptor.height) * _color_bpp;
+    const u32 _depth_bytes = static_cast<u32>(_descriptor.buffer_width) * static_cast<u32>(_descriptor.height) * 2u;
+    _draw_buffer = allocator.allocate(_color_bytes, 16);
 
     if (_descriptor.is_presentable) {
-        _display_buffer = allocator.allocate(color_bytes, 16);
+        _display_buffer = allocator.allocate(_color_bytes, 16);
     }
-
     if (_descriptor.has_depth) {
-        _depth_buffer = allocator.allocate(depth_bytes, 16);
+        _depth_buffer = allocator.allocate(_depth_bytes, 16);
     }
-
     if (!_draw_buffer) {
         _display_buffer = nullptr;
         _depth_buffer = nullptr;
         return;
     }
-
     if (_descriptor.is_presentable && !_display_buffer) {
         _draw_buffer = nullptr;
         _depth_buffer = nullptr;
         return;
     }
-
     if (_descriptor.has_depth && !_depth_buffer) {
         _draw_buffer = nullptr;
         _display_buffer = nullptr;
@@ -90,15 +84,15 @@ framebuffer::~framebuffer()
 
 framebuffer framebuffer::default_framebuffer(vram_allocator& allocator)
 {
-    framebuffer_descriptor descriptor {};
-    descriptor.width = psp_screen_width;
-    descriptor.height = psp_screen_height;
-    descriptor.buffer_width = psp_buffer_width;
-    descriptor.format = pixel_format::rgba8888;
-    descriptor.is_presentable = true;
-    descriptor.has_depth = true;
+    framebuffer_descriptor _default_descriptor = {};
+    _default_descriptor.width = psp_screen_width;
+    _default_descriptor.height = psp_screen_height;
+    _default_descriptor.buffer_width = psp_buffer_width;
+    _default_descriptor.format = pixel_format::rgba8888;
+    _default_descriptor.is_presentable = true;
+    _default_descriptor.has_depth = true;
 
-    return framebuffer(allocator, descriptor);
+    return framebuffer(allocator, _default_descriptor);
 }
 
 b32 framebuffer::is_valid() const noexcept
@@ -106,11 +100,9 @@ b32 framebuffer::is_valid() const noexcept
     if (!_draw_buffer) {
         return false;
     }
-
     if (_descriptor.is_presentable && !_display_buffer) {
         return false;
     }
-
     if (_descriptor.has_depth && !_depth_buffer) {
         return false;
     }

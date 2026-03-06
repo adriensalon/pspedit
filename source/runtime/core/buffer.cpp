@@ -11,6 +11,7 @@ namespace {
         if (descriptor.vertex.stride == 0 || descriptor.count == 0) {
             return 0;
         }
+		
         return static_cast<u32>(descriptor.vertex.stride) * descriptor.count;
     }
 

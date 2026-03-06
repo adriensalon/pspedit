@@ -24,7 +24,7 @@ struct vertex_buffer_descriptor {
 
 struct index_buffer_descriptor {
     buffer_usage usage = buffer_usage::static_draw;
-	index_format format;
+    index_format format;
     u32 count = 0;
 };
 
