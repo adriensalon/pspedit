@@ -1,6 +1,6 @@
 #pragma once
 
-#include <api/vertex.hpp>
+#include <common/core/vertex.hpp>
 
 namespace pspedit {
 
@@ -11,6 +11,11 @@ enum struct buffer_usage : u8 {
     dynamic_draw,
 };
 
+enum struct index_format : u8 {
+    u16,
+    u32
+};
+
 struct vertex_buffer_descriptor {
     vertex_descriptor vertex = {};
     buffer_usage usage = buffer_usage::static_draw;
@@ -19,6 +24,7 @@ struct vertex_buffer_descriptor {
 
 struct index_buffer_descriptor {
     buffer_usage usage = buffer_usage::static_draw;
+	index_format format;
     u32 count = 0;
 };
 

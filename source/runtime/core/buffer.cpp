@@ -1,7 +1,7 @@
 #include <cstring>
 
-#include <platform/psp/buffer.hpp>
-#include <platform/psp/vram.hpp>
+#include <runtime/core/buffer.hpp>
+#include <runtime/core/vram.hpp>
 
 namespace pspedit {
 namespace {

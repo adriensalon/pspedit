@@ -2,8 +2,8 @@
 
 #include <pspge.h>
 
-#include <platform/psp/framebuffer.hpp>
-#include <platform/psp/vram.hpp>
+#include <runtime/core/framebuffer.hpp>
+#include <runtime/core/vram.hpp>
 
 namespace pspedit {
 namespace {

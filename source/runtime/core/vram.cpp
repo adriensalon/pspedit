@@ -1,7 +1,7 @@
 #include <pspge.h>
 #include <pspkernel.h>
 
-#include <platform/psp/vram.hpp>
+#include <runtime/core/vram.hpp>
 
 namespace pspedit {
 namespace {

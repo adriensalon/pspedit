@@ -5,7 +5,8 @@
 #include <pspusbbus.h>
 #include <pspusbstor.h>
 
-#include <platform/psp/usb.hpp>
+#include <runtime/core/kernel.hpp>
+#include <runtime/core/usb.hpp>
 
 namespace pspedit {
 namespace {
@@ -38,12 +39,12 @@ bool kernel_start_usb(kernel_context& context)
 
     _usb_result = context.usb_start(PSP_USBBUS_DRIVERNAME, 0, 0);
     pspDebugScreenPrintf("Tried USB bus driver registration with result 0x%08X\n", _usb_result);
-    
-	_usb_result = context.usb_start(PSP_USBSTOR_DRIVERNAME, 0, 0);
-	pspDebugScreenPrintf("Tried USB mass storage registration with result 0x%08X\n", _usb_result);
+
+    _usb_result = context.usb_start(PSP_USBSTOR_DRIVERNAME, 0, 0);
+    pspDebugScreenPrintf("Tried USB mass storage registration with result 0x%08X\n", _usb_result);
 
     // _usb_result = context.usb_activate(0x1C00);
-	// pspDebugScreenPrintf("Tried USB activation with result 0x%08X\n", _usb_result);
+    // pspDebugScreenPrintf("Tried USB activation with result 0x%08X\n", _usb_result);
 
     return (_usb_result >= 0);
 }

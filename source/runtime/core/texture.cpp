@@ -2,9 +2,9 @@
 
 #include <pspgu.h>
 
-#include <platform/psp/graphics.hpp>
-#include <platform/psp/texture.hpp>
-#include <platform/psp/vram.hpp>
+#include <runtime/core/graphics.hpp>
+#include <runtime/core/texture.hpp>
+#include <runtime/core/vram.hpp>
 
 namespace pspedit {
 namespace {

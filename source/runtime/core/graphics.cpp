@@ -2,13 +2,14 @@
 #include <pspdisplay.h>
 #include <pspgu.h>
 
-#include <platform/psp/framebuffer.hpp>
-#include <platform/psp/graphics.hpp>
+#include <runtime/core/buffer.hpp>
+#include <runtime/core/framebuffer.hpp>
+#include <runtime/core/graphics.hpp>
 
 namespace pspedit {
 namespace {
 
-	[[nodiscard]] int _to_gu_psm(const pixel_format format)
+    [[nodiscard]] int _to_gu_psm(const pixel_format format)
     {
         switch (format) {
         case pixel_format::rgb565:
@@ -30,6 +31,34 @@ namespace {
         }
     }
 
+    static u32 _to_gu_vertex_format(const vertex_descriptor& descriptor)
+    {
+        u32 _format = 0;
+        for (u8 _attribute_index = 0; _attribute_index < descriptor.attrib_count; ++_attribute_index) {
+            const vertex_attribute& _attribute = descriptor.attributes[_attribute_index];
+
+            switch (_attribute.semantic) {
+            case vertex_semantic::position:
+                if (_attribute.storage == vertex_storage::f32) {
+                    _format |= GU_VERTEX_32BITF;
+                }
+                break;
+
+            case vertex_semantic::color:
+                if (_attribute.storage == vertex_storage::normalized_u8 && _attribute.components == 4) {
+                    _format |= GU_COLOR_8888;
+                }
+                break;
+
+            default:
+                break;
+            }
+        }
+
+        _format |= GU_TRANSFORM_3D;
+        return _format;
+    }
+
 }
 
 graphics_context::graphics_context(framebuffer& target, void* command_list, const std::size_t command_list_bytes)
@@ -37,8 +66,8 @@ graphics_context::graphics_context(framebuffer& target, void* command_list, cons
     , _command_list_bytes(command_list_bytes)
 {
     sceGuInit();
-	begin_frame(target);
-	end_frame(target);
+    begin_frame(target);
+    end_frame(target);
     sceGuDisplay(GU_TRUE);
 }
 
@@ -79,6 +108,17 @@ void graphics_context::clear(const u32 clear_flags, const u32 color, const f32 d
     // sceGuClearDepth(static_cast<int>(depth * 0xFFFF)); // GU depth is typically 16-bit
     // sceGuClearStencil(stencil);
     sceGuClear(clear_flags);
+}
+
+void graphics_context::draw(const vertex_buffer& buffer)
+{
+    const vertex_descriptor& _vertex_descriptor = buffer.descriptor().vertex;
+    const u32 _buffer_count = buffer.descriptor().count;
+    const u32 _format = _to_gu_vertex_format(_vertex_descriptor);
+
+    sceGuDisable(GU_TEXTURE_2D);
+    sceGuShadeModel(GU_SMOOTH);
+    sceGuDrawArray(GU_TRIANGLES, _format, _buffer_count, 0, buffer.data());
 }
 
 }

@@ -1,11 +1,28 @@
 cmake_minimum_required(VERSION 3.20)
 project(pspedit)
 
+# pspedit_common
+file(GLOB_RECURSE pspedit_common_sources "source/common/*.cpp")
+add_library(pspedit_common STATIC ${pspedit_common_sources})
+set_property(TARGET pspedit_common PROPERTY CXX_STANDARD 17)
+target_include_directories(pspedit_common PUBLIC "source/")
+
 if(PSP)
 	include(cmake/add_libpspexploit.cmake)
 	add_libpspexploit("external/libpspexploit" "${CMAKE_CURRENT_BINARY_DIR}/external/libpspexploit")
-	add_subdirectory("source/common" "${CMAKE_BINARY_DIR}/common")
-	add_subdirectory("source/runtime" "${CMAKE_BINARY_DIR}/runtime")
+	
+	# pspedit_runtime
+	file(GLOB_RECURSE pspedit_runtime_sources "source/runtime/*.cpp")
+	add_executable(pspedit_runtime ${pspedit_runtime_sources})
+	set_property(TARGET pspedit_runtime PROPERTY CXX_STANDARD 17)
+	target_link_libraries(pspedit_runtime PRIVATE pspedit_common pspexploit pspdebug pspgu pspge pspdisplay pspctrl psprtc)
+	create_pbp_file(
+		TARGET pspedit_runtime
+		ICON_PATH NULL
+		BACKGROUND_PATH NULL
+		PREVIEW_PATH NULL
+		TITLE pspedit_runtime
+		VERSION 01.00)
 else()
 	include(cmake/add_libdwarf.cmake)
 	include(cmake/add_libusb.cmake)

@@ -1,62 +1,30 @@
 #pragma once
 
-#include <core/scalar.hpp>
+#include <common/core/texture.hpp>
 
 namespace pspedit {
 
-enum struct texture_internal_format {
-    rgba5650,
-    rgba4444,
-    rgba5551,
-    rgba8888
-};
+struct pipeline_state;
+struct framebuffer;
+struct vertex_buffer;
 
-enum struct texture_filter {
-    nearest,
-    linear
-};
+struct graphics_context {
+    graphics_context(framebuffer& target, void* command_list, const std::size_t command_list_bytes);
+    graphics_context(const graphics_context& other) = delete;
+    graphics_context& operator=(const graphics_context& other) = delete;
+    graphics_context(graphics_context&& other) noexcept = default;
+    graphics_context& operator=(graphics_context&& other) noexcept = default;
+	~graphics_context();
 
-enum struct material_face_select_format {
-    back,
-    front,
-    front_and_back
-};
+    void begin_frame(const framebuffer& target);
+    void end_frame(framebuffer& target);
+    void clear(const u32 clear_flags, const u32 color = 0, const f32 depth = 1.f, const u32 stencil = 0);
+	void draw(const vertex_buffer& buffer);
 
-enum struct material_culling_format {
-    clockwise,
-    counter_clockwise
-};
 
-enum struct material_depth_function_format {
-    less_equal
-};
-
-enum struct material_blend_operation_format {
-    add
-};
-
-enum struct material_blend_mode_format {
-    source_alpha,
-    one_minus_source_alpha
-};
-
-struct material_cull_format {
-    bool is_enabled = false;
-    material_face_select_format cull_face = material_face_select_format::back;
-    material_culling_format front_face = material_culling_format::counter_clockwise;
-};
-
-struct material_depth_format {
-    bool is_test_enabled = false;
-    bool is_write_enabled = true;
-    material_depth_function_format depth_function = material_depth_function_format::less_equal;
-};
-
-struct material_blend_format {
-    bool is_enabled = false;
-    material_blend_operation_format blend_operation = material_blend_operation_format::add;
-    material_blend_mode_format blend_source = material_blend_mode_format::source_alpha;
-    material_blend_mode_format blend_destination = material_blend_mode_format::one_minus_source_alpha;
+private:
+    void* _command_list;
+    std::size_t _command_list_bytes;
 };
 
 }

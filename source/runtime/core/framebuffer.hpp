@@ -1,6 +1,6 @@
 #pragma once
 
-#include <api/framebuffer.hpp>
+#include <common/core/framebuffer.hpp>
 
 namespace pspedit {
 

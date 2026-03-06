@@ -1,6 +1,6 @@
 #pragma once
 
-#include <api/buffer.hpp>
+#include <common/core/buffer.hpp>
 
 namespace pspedit {
 

@@ -1,19 +1,14 @@
 #include <pspdebug.h>
-#include <pspdisplay.h>
-#include <pspgu.h>
 #include <pspkernel.h>
+#include <pspgu.h>
 
-#include <platform/psp/framebuffer.hpp>
-#include <platform/psp/graphics.hpp>
-#include <platform/psp/usb.hpp>
-#include <platform/psp/vram.hpp>
+#include <runtime/core/framebuffer.hpp>
+#include <runtime/core/graphics.hpp>
+#include <runtime/core/usb.hpp>
+#include <runtime/core/vram.hpp>
 
 PSP_MODULE_INFO("pspedit_game", 0, 1, 0);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
-
-#define BUFFER_WIDTH 512
-#define SCREEN_WIDTH 480
-#define SCREEN_HEIGHT 272
 
 static unsigned int __attribute__((aligned(16))) _gu_command_list[262144];
 

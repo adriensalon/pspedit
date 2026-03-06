@@ -1,6 +1,6 @@
 #pragma once
 
-#include <api/scalar.hpp>
+#include <common/core/scalar.hpp>
 
 namespace pspedit {
 

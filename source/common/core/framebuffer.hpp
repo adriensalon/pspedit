@@ -1,6 +1,6 @@
 #pragma once
 
-#include <api/texture.hpp>
+#include <common/core/texture.hpp>
 
 namespace pspedit {
 

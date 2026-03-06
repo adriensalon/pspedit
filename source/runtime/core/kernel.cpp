@@ -6,7 +6,7 @@ extern "C" {
 
 #include <pspdebug.h>
 
-#include <platform/psp/kernel.hpp>
+#include <runtime/core/kernel.hpp>
 
 #define NID_sceKernelLoadModule 0xFFB9B760
 #define NID_sceKernelStartModule 0xE6BF3960
