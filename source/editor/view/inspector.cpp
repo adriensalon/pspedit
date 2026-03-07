@@ -1,6 +1,6 @@
 #include <imgui.h>
 
-#include <view/inspector.hpp>
+#include <editor/view/inspector.hpp>
 
 void draw_inspector()
 {

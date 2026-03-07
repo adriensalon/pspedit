@@ -1,6 +1,6 @@
 #include <nfd.h>
 
-#include <core/dialog.hpp>
+#include <editor/core/dialog.hpp>
 
 namespace {
 

@@ -4,13 +4,12 @@
 #include <optional>
 #include <vector>
 
-#include <core/content.hpp>
-#include <core/image.hpp>
-#include <core/material.hpp>
-#include <core/mesh.hpp>
-#include <core/scene.hpp>
-#include <core/script.hpp>
-#include <core/transform.hpp>
+#include <common/asset/image.hpp>
+// #include <common/asset/material.hpp>
+// #include <common/asset/mesh.hpp>
+// #include <common/asset/scene.hpp>
+// #include <common/asset/script.hpp>
+// #include <common/asset/transform.hpp>
 
 enum struct project_run_target {
     ppsspp_emulator,
@@ -19,7 +18,7 @@ enum struct project_run_target {
 
 template <typename Object>
 struct object_database_entry {
-    pspedit::content_database_entry content_entry = {};
+    // pspedit::content_database_entry content_entry = {};
     std::optional<std::filesystem::path> import_path = std::nullopt;
     std::optional<std::string> editor_name = std::nullopt;
 
@@ -34,11 +33,11 @@ struct object_database {
 };
 
 struct editor_project {
-    object_database<pspedit::image_object> images = {};
-    object_database<pspedit::material_object> materials = {};
-    object_database<pspedit::transform_object> transforms = {};
-    object_database<pspedit::scene_object> scenes = {};
-    object_database<pspedit::script_object> scripts = {};
+    // object_database<pspedit::image_object> images = {};
+    // object_database<pspedit::material_object> materials = {};
+    // object_database<pspedit::transform_object> transforms = {};
+    // object_database<pspedit::scene_object> scenes = {};
+    // object_database<pspedit::script_object> scripts = {};
     std::filesystem::path directory = {};
 };
 
@@ -48,8 +47,8 @@ void open_directory(const std::filesystem::path& project_directory);
 void save_all();
 void build_and_run();
 
-void emplace_image(const pspedit::image_object& image, const std::string& editor_name, const std::optional<std::filesystem::path>& import_path);
-void erase_image(const pspedit::image_object& image, const std::string& editor_name, const std::optional<std::filesystem::path>& import_path);
+// void emplace_image(const pspedit::image_object& image, const std::string& editor_name, const std::optional<std::filesystem::path>& import_path);
+// void erase_image(const pspedit::image_object& image, const std::string& editor_name, const std::optional<std::filesystem::path>& import_path);
 void reimport_from_dwarf_file();
 void reload_assets();
 [[nodiscard]] bool is_project_buildable();

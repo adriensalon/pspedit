@@ -1,8 +1,8 @@
 #include <imgui.h>
 
-#include <core/dialog.hpp>
-#include <core/project.hpp>
-#include <view/header.hpp>
+#include <editor/core/dialog.hpp>
+#include <editor/core/project.hpp>
+#include <editor/view/header.hpp>
 
 namespace {
 

@@ -6,13 +6,14 @@
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
 #include <stb_image_resize2.h>
 
-#include <core/log.hpp>
-#include <core/project.hpp>
-#include <import/stbimage.hpp>
+#include <editor/core/log.hpp>
+#include <editor/core/project.hpp>
+#include <editor/import/stbimage.hpp>
 
+namespace pspedit {
 namespace {
 
-constexpr int _desired_channels = 4;
+    constexpr int _desired_channels = 4;
 }
 
 void import_stbimage(const std::filesystem::path& stbimage_path)
@@ -38,24 +39,28 @@ void import_stbimage(const std::filesystem::path& stbimage_path)
         return;
     }
 
-    pspedit::image_object _image = current_project->images.default_object ? current_project->images.default_object.value() : pspedit::image_object(); // TODO HANDLE DEFAULTS
-    const pspedit::u32 _bytes_per_pixel = _desired_channels;
+	image_header _header;
+	_header.magic = 0;
+
+	std::vector<u8> _pixels;
+    const u32 _bytes_per_pixel = _desired_channels;
     const std::size_t _byte_count = static_cast<std::size_t>(_source_width) * static_cast<std::size_t>(_source_height) * _bytes_per_pixel;
-    _image.stride_width = static_cast<pspedit::u32>(_source_width) * _bytes_per_pixel;
-    _image.format = pspedit::texture_internal_format::rgba8888;
-    _image.min_filter = pspedit::texture_filter::nearest;
-    _image.mag_filter = pspedit::texture_filter::nearest;
-    _image.swizzle = 0;
-    _image.width = static_cast<pspedit::u16>(_source_width);
-    _image.height = static_cast<pspedit::u16>(_source_height);
-    _image.pixels.resize(_byte_count);
-    std::memcpy(_image.pixels.data(), _pixels_data_ptr, _byte_count);
+    _header.texture.stride = static_cast<u32>(_source_width) * _bytes_per_pixel;
+    _header.texture.format = pixel_format::rgba8888;
+    _header.texture.filter_min = texture_filter::nearest;
+    _header.texture.filter_mag = texture_filter::nearest;
+    _header.texture.swizzle = 0;
+    _header.texture.width = static_cast<u16>(_source_width);
+    _header.texture.height = static_cast<u16>(_source_height);
+    _pixels.resize(_byte_count);
+    std::memcpy(_pixels.data(), _pixels_data_ptr, _byte_count);
     stbi_image_free(_pixels_data_ptr);
 
-    object_database_entry<pspedit::image_object>& _image_entry = current_project->images.entries.emplace_back();
-    _image_entry.editor_name = stbimage_path.filename().replace_extension().string();
-    _image_entry.import_path = stbimage_path;
-    _image_entry.content_entry.id = { 4444 }; // TODO GENERATE
-    _image_entry.content_entry.path = current_project->directory / (std::to_string(_image_entry.content_entry.id.value) + ".asset");
-    _image_entry.save_object(_image);
+    // object_database_entry<image_object>& _image_entry = current_project->images.entries.emplace_back();
+    // _image_entry.editor_name = stbimage_path.filename().replace_extension().string();
+    // _image_entry.import_path = stbimage_path;
+    // _image_entry.content_entry.id = { 4444 }; // TODO GENERATE
+    // _image_entry.content_entry.path = current_project->directory / (std::to_string(_image_entry.content_entry.id.value) + ".asset");
+    // _image_entry.save_object(_image);
+}
 }

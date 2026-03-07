@@ -2,7 +2,7 @@
 
 #include <imgui.h>
 
-#include <view/3dview.hpp>
+#include <editor/view/3dview.hpp>
 
 namespace {
 

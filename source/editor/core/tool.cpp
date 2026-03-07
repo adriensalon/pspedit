@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <sstream>
 
-#include <core/tool.hpp>
+#include <editor/core/tool.hpp>
 
 namespace {
 

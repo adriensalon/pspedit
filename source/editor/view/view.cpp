@@ -1,12 +1,12 @@
 #include <imgui.h>
 
-#include <core/project.hpp>
-#include <view/3dview.hpp>
-#include <view/browser.hpp>
-#include <view/console.hpp>
-#include <view/header.hpp>
-#include <view/inspector.hpp>
-#include <view/view.hpp>
+#include <editor/core/project.hpp>
+#include <editor/view/3dview.hpp>
+#include <editor/view/browser.hpp>
+#include <editor/view/console.hpp>
+#include <editor/view/header.hpp>
+#include <editor/view/inspector.hpp>
+#include <editor/view/view.hpp>
 
 std::string window_title()
 {

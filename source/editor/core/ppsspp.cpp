@@ -1,8 +1,8 @@
 #include <optional>
 
-#include <core/log.hpp>
-#include <core/ppsspp.hpp>
-#include <core/tool.hpp>
+#include <editor/core/log.hpp>
+#include <editor/core/ppsspp.hpp>
+#include <editor/core/tool.hpp>
 
 #ifdef _WIN32
 #ifndef NOMINMAX

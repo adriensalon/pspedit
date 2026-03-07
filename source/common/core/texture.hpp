@@ -4,7 +4,7 @@
 
 namespace pspedit {
 
-enum struct pixel_format {
+enum struct pixel_format : u8 {
     r8,
     r16,
     r32,
@@ -29,11 +29,14 @@ struct texture_descriptor {
     u16 height = 0;
     u32 stride = 0;
     u8 swizzle = 0;
-	pixel_format format = pixel_format::rgba8888;
+    pixel_format format = pixel_format::rgba8888;
     texture_filter filter_min = texture_filter::nearest;
     texture_filter filter_mag = texture_filter::nearest;
     texture_wrap wrap_u = texture_wrap::clamp;
     texture_wrap wrap_v = texture_wrap::clamp;
 };
+
+template <typename Archive>
+void serialize(Archive& archive, texture_descriptor& descriptor);
 
 }

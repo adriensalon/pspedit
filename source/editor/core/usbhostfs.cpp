@@ -127,7 +127,7 @@ inline int socket_close(SOCKET s) { return ::closesocket(s); }
 
 #include <libusb.h>
 
-#include <core/usbhostfs.hpp>
+#include <editor/core/usbhostfs.hpp>
 
 namespace {
 

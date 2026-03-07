@@ -5,7 +5,7 @@
 #include <dwarf.h>
 #include <libdwarf.h>
 
-#include <import/dwarf.hpp>
+#include <editor/import/dwarf.hpp>
 
 struct dwarf_asset_reference {
     std::filesystem::path path;

@@ -1,9 +1,9 @@
 #include <fstream>
 
-#include <core/docker.hpp>
-#include <core/log.hpp>
-#include <core/ppsspp.hpp>
-#include <core/project.hpp>
+#include <editor/core/docker.hpp>
+#include <editor/core/log.hpp>
+#include <editor/core/ppsspp.hpp>
+#include <editor/core/project.hpp>
 
 namespace {
 
@@ -68,8 +68,8 @@ void object_database_entry<Object>::save_object(const Object& object) const
 
 }
 
-template void object_database_entry<pspedit::image_object>::save_object(const pspedit::image_object& object) const;
-template void object_database_entry<pspedit::material_object>::save_object(const pspedit::material_object& object) const;
+// template void object_database_entry<pspedit::image_object>::save_object(const pspedit::image_object& object) const;
+// template void object_database_entry<pspedit::material_object>::save_object(const pspedit::material_object& object) const;
 
 void open_directory(const std::filesystem::path& project_directory)
 {

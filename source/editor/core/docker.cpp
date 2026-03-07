@@ -1,9 +1,9 @@
 #include <optional>
 #include <sstream>
 
-#include <core/docker.hpp>
-#include <core/log.hpp>
-#include <core/tool.hpp>
+#include <editor/core/docker.hpp>
+#include <editor/core/log.hpp>
+#include <editor/core/tool.hpp>
 
 namespace {
 

@@ -1,17 +1,28 @@
 #pragma once
 
+#include <filesystem>
+#include <vector>
+
 #include <common/asset/image.hpp>
 
 namespace pspedit {
 
-using shared_image_reference = u32;
+struct texture;
 
-struct shared_image {
+struct runtime_image_header {
+	u32 magic = 0;
+    u16 version = 1;
+    image_id id = 0;
+    texture_descriptor texture = {};
+	std::vector<u8> pixels;
+};
 
+struct image {
+    image(vram_allocator& allocator, const image_header& header);
+    image(vram_allocator& allocator, const image_header& header, const void* pixels);
 
 private:
-	image_asset_header* _header;
-	void* _pixels;
+    texture _texture;
 };
 
 }

@@ -1,7 +1,7 @@
 #include <imgui.h>
 
-#include <core/project.hpp>
-#include <view/browser.hpp>
+#include <editor/core/project.hpp>
+#include <editor/view/browser.hpp>
 
 namespace {
 
@@ -14,24 +14,24 @@ static void _draw_assets_browser()
     }
 
     if (ImGui::TreeNode("Image")) {
-        for (const object_database_entry<pspedit::image_object>& _entry : current_project->images.entries) {
-            const std::string _name = _entry.editor_name ? _entry.editor_name.value() : "untitled";
-            if (!_filter.PassFilter(_name.c_str())) {
-                continue;
-            }
-            ImGui::Selectable(_name.c_str(), false);
-        }
+        // for (const object_database_entry<pspedit::image_object>& _entry : current_project->images.entries) {
+        //     const std::string _name = _entry.editor_name ? _entry.editor_name.value() : "untitled";
+        //     if (!_filter.PassFilter(_name.c_str())) {
+        //         continue;
+        //     }
+        //     ImGui::Selectable(_name.c_str(), false);
+        // }
         ImGui::TreePop();
     }
 
     if (ImGui::TreeNode("Material")) {
-        for (const object_database_entry<pspedit::material_object>& _entry : current_project->materials.entries) {
-            const std::string _name = _entry.editor_name ? _entry.editor_name.value() : "untitled";
-            if (!_filter.PassFilter(_name.c_str())) {
-                continue;
-            }
-            ImGui::Selectable(_name.c_str(), false);
-        }
+        // for (const object_database_entry<pspedit::material_object>& _entry : current_project->materials.entries) {
+        //     const std::string _name = _entry.editor_name ? _entry.editor_name.value() : "untitled";
+        //     if (!_filter.PassFilter(_name.c_str())) {
+        //         continue;
+        //     }
+        //     ImGui::Selectable(_name.c_str(), false);
+        // }
         ImGui::TreePop();
     }
 
