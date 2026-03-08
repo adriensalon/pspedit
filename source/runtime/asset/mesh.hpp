@@ -5,6 +5,7 @@
 namespace pspedit {
 
 struct vram_allocator;
+struct mesh_asset;
 
 struct mesh {
     mesh(vram_allocator& allocator, const mesh_asset& asset);

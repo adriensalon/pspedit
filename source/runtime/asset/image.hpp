@@ -12,7 +12,7 @@ struct image {
     image(const image& other) = delete;
     image& operator=(const image& other) = delete;
     image(image&& other) noexcept = default;
-    image& operator=(image&& other) noexcept = delete;
+    image& operator=(image&& other) noexcept = default;
 
 
 

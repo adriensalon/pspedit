@@ -15,7 +15,15 @@ struct asset_id {
         return value != 0;
     }
 
-    // friend bool operator==(asset_id, asset_id) = default;
+    friend bool operator==(const asset_id& a, const asset_id& b) noexcept
+    {
+        return a.value == b.value;
+    }
+
+    friend bool operator!=(const asset_id& a, const asset_id& b) noexcept
+    {
+        return !(a == b);
+    }
 };
 
 struct image_tag { };
@@ -44,9 +52,27 @@ template <typename Archive>
 void serialize(Archive& archive, material_id& id);
 
 template <typename Archive>
+void serialize(Archive& archive, package_id& id);
+
+template <typename Archive>
 void serialize(Archive& archive, model_id& id);
 
 template <typename Archive>
 void serialize(Archive& archive, transform_id& id);
+
+template <typename Archive>
+void serialize(Archive& archive, scene_id& id);
+
+}
+
+namespace std {
+
+template <typename Tag>
+struct hash<pspedit::asset_id<Tag>> {
+    size_t operator()(const pspedit::asset_id<Tag>& id) const noexcept
+    {
+        return hash<pspedit::u32> {}(id.value);
+    }
+};
 
 }

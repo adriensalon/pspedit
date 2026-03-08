@@ -2,13 +2,15 @@ cmake_minimum_required(VERSION 3.20)
 project(pspedit)
 
 include(cmake/add_cereal.cmake)
+include(cmake/add_entt.cmake)
 add_cereal("external/cereal" "${CMAKE_CURRENT_BINARY_DIR}/external/cereal")
+add_entt("external/entt" "${CMAKE_CURRENT_BINARY_DIR}/external/entt")
 
 # pspedit_common
 file(GLOB_RECURSE pspedit_common_sources "source/common/*.cpp")
 add_library(pspedit_common STATIC ${pspedit_common_sources})
 set_property(TARGET pspedit_common PROPERTY CXX_STANDARD 17)
-target_link_libraries(pspedit_common PUBLIC cereal)
+target_link_libraries(pspedit_common PUBLIC cereal entt)
 target_include_directories(pspedit_common PUBLIC "source/")
 
 if(PSP)

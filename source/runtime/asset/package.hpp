@@ -2,8 +2,6 @@
 
 namespace pspedit {
 
-struct material {
-
+struct package {
 };
-
 }

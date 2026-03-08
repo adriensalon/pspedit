@@ -1,0 +1,5 @@
+function(add_entt SOURCE_DIR BINARY_DIR)
+	add_library(entt INTERFACE)
+	target_include_directories(entt INTERFACE ${SOURCE_DIR}/src)
+	target_compile_features(entt INTERFACE cxx_std_20)
+endfunction()
