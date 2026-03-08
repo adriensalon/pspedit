@@ -36,32 +36,23 @@ enum struct blend_operation : u8 {
     reverse_substract
 };
 
-struct blend_state {
-    b32 enabled = false;
-    blend_operation operation = blend_operation::add;
-    blend_factor source = blend_factor::source_alpha;
-    blend_factor destination = blend_factor::one_minus_source_alpha;
-};
-
-struct depth_state {
-    b32 test_enabled = true;
-    b32 write_enabled = true;
-    compare_operation operation = compare_operation::less_equal;
-};
-
-struct alphatest_state {
-    b32 enabled = false;
-    u8 reference = 0;
-    compare_operation operation = compare_operation::greater;
-};
-
 struct pipeline_descriptor {
     cull_mode cull = cull_mode::back;
-    depth_state depth = {};
-    blend_state blend = {};
-    alphatest_state alpha_test = {};
-    b32 shade_smooth = true;
-    b32 dither = false;
+    b32 is_depth_test_enabled = true;
+    b32 is_depth_write_enabled = true;
+    compare_operation depth_operation = compare_operation::less_equal;
+    b32 is_blend_enabled = false;
+    blend_operation blend = blend_operation::add;
+    blend_factor blend_source = blend_factor::source_alpha;
+    blend_factor blend_destination = blend_factor::one_minus_source_alpha;
+    b32 is_dither_enabled = false;
+    b32 is_alphatest_enabled = false;
+    u8 alphatest_reference = 0;
+    compare_operation alphatest_operation = compare_operation::greater;
+	b32 is_smooth_shading_enabled = true;
 };
+
+template <typename Archive>
+void serialize(Archive& archive, pipeline_descriptor& descriptor);
 
 }

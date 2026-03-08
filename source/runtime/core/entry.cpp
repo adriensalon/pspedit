@@ -3,7 +3,7 @@
 #include <pspgu.h>
 
 #include <runtime/core/framebuffer.hpp>
-#include <runtime/core/graphics.hpp>
+#include <runtime/core/swapchain.hpp>
 #include <runtime/core/usb.hpp>
 #include <runtime/core/vram.hpp>
 
@@ -38,7 +38,7 @@ int main()
     pspDebugScreenPrintf("Created VRAM allocator\n");
     pspedit::framebuffer _default_framebuffer = pspedit::framebuffer::default_framebuffer(_vram);
     pspDebugScreenPrintf("Created default framebuffer\n");
-    pspedit::graphics_context _context(_default_framebuffer, _gu_command_list, sizeof(_gu_command_list));
+    pspedit::swapchain _context(_default_framebuffer, _gu_command_list, sizeof(_gu_command_list));
     pspDebugScreenPrintf("Created graphics context\n");
 	
     int running = 1;

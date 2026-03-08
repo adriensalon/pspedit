@@ -4,7 +4,7 @@
 
 #include <runtime/core/buffer.hpp>
 #include <runtime/core/framebuffer.hpp>
-#include <runtime/core/graphics.hpp>
+#include <runtime/core/swapchain.hpp>
 
 namespace pspedit {
 namespace {
@@ -61,7 +61,7 @@ namespace {
 
 }
 
-graphics_context::graphics_context(framebuffer& target, void* command_list, const std::size_t command_list_bytes)
+swapchain::swapchain(framebuffer& target, void* command_list, const std::size_t command_list_bytes)
     : _command_list(command_list)
     , _command_list_bytes(command_list_bytes)
 {
@@ -71,12 +71,12 @@ graphics_context::graphics_context(framebuffer& target, void* command_list, cons
     sceGuDisplay(GU_TRUE);
 }
 
-graphics_context::~graphics_context()
+swapchain::~swapchain()
 {
     sceGuTerm();
 }
 
-void graphics_context::begin_frame(const framebuffer& target)
+void swapchain::begin_frame(const framebuffer& target)
 {
     const framebuffer_descriptor& _descriptor = target.descriptor();
 
@@ -94,7 +94,7 @@ void graphics_context::begin_frame(const framebuffer& target)
     sceGuEnable(GU_SCISSOR_TEST);
 }
 
-void graphics_context::end_frame(framebuffer& target)
+void swapchain::end_frame(framebuffer& target)
 {
     sceGuFinish();
     sceGuSync(0, 0);
@@ -102,7 +102,7 @@ void graphics_context::end_frame(framebuffer& target)
     sceGuSwapBuffers();
 }
 
-void graphics_context::clear(const u32 clear_flags, const u32 color, const f32 depth, const u32 stencil)
+void swapchain::clear(const u32 clear_flags, const u32 color, const f32 depth, const u32 stencil)
 {
     sceGuClearColor(color);
     // sceGuClearDepth(static_cast<int>(depth * 0xFFFF)); // GU depth is typically 16-bit
@@ -110,7 +110,7 @@ void graphics_context::clear(const u32 clear_flags, const u32 color, const f32 d
     sceGuClear(clear_flags);
 }
 
-void graphics_context::draw(const vertex_buffer& buffer)
+void swapchain::draw(const vertex_buffer& buffer)
 {
     const vertex_descriptor& _vertex_descriptor = buffer.descriptor().vertex;
     const u32 _buffer_count = buffer.descriptor().count;

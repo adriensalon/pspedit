@@ -2,7 +2,7 @@
 
 #include <pspgu.h>
 
-#include <runtime/core/graphics.hpp>
+#include <runtime/core/swapchain.hpp>
 #include <runtime/core/texture.hpp>
 #include <runtime/core/vram.hpp>
 
@@ -135,7 +135,7 @@ void texture::update(vram_allocator& allocator, const texture_descriptor& descri
     vram_allocator::dcache_writeback(_data, _new_bytes);
 }
 
-void texture::bind(graphics_context& context, const u8 mip_level) const
+void texture::bind(swapchain& context, const u8 mip_level) const
 {
     if (!_data) {
         return;

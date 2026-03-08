@@ -18,7 +18,7 @@ struct mesh_asset {
 template <typename Archive>
 void serialize(Archive& archive, mesh_asset& header);
 
-bool load_mesh(const std::filesystem::path& archive_path, mesh_asset& asset);
-bool save_mesh(const std::filesystem::path& archive_path, const mesh_asset& asset);
+bool load_asset(const std::filesystem::path& archive_path, mesh_asset& asset);
+bool save_asset(const std::filesystem::path& archive_path, const mesh_asset& asset);
 
 }
