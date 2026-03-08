@@ -1,6 +1,5 @@
 #pragma once
 
-#include <common/core/mesh.hpp>
 #include <runtime/core/buffer.hpp>
 
 namespace pspedit {
@@ -13,10 +12,8 @@ struct mesh {
     mesh& operator=(const mesh& other) = delete;
     mesh(mesh&& other) noexcept = default;
     mesh& operator=(mesh&& other) noexcept = default;
-	~mesh();
 
 private:
-    mesh_asset _asset;
     vertex_buffer _vertex_buffer;
     index_buffer _index_buffer;
 };

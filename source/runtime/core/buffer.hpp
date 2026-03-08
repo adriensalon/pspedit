@@ -16,6 +16,7 @@ struct vertex_buffer {
     ~vertex_buffer();
 
     void update(vram_allocator& allocator, const vertex_buffer_descriptor& descriptor, const void* vertices);
+	void use() const;
     [[nodiscard]] b32 is_valid() const noexcept;
     [[nodiscard]] u32 size_bytes() const noexcept;
     [[nodiscard]] const vertex_buffer_descriptor& descriptor() const noexcept;
@@ -37,6 +38,7 @@ struct index_buffer {
     ~index_buffer();
 
     void update(vram_allocator& allocator, const index_buffer_descriptor& descriptor, const u16* indices);
+	void use() const;
     [[nodiscard]] b32 is_valid() const noexcept;
     [[nodiscard]] u32 size_bytes() const noexcept;
     [[nodiscard]] const index_buffer_descriptor& descriptor() const noexcept;

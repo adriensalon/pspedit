@@ -2,6 +2,8 @@
 #include <pspkernel.h>
 #include <pspgu.h>
 
+#include <common/asset/material.hpp>
+
 #include <runtime/core/framebuffer.hpp>
 #include <runtime/core/swapchain.hpp>
 #include <runtime/core/usb.hpp>
@@ -33,6 +35,9 @@ int main()
     if (_thread_id >= 0) {
         sceKernelStartThread(_thread_id, 0, nullptr);
     }
+
+	pspedit::material_asset _mat;
+	// pspedit::load_asset("okok", _mat);
 
     pspedit::vram_allocator _vram;
     pspDebugScreenPrintf("Created VRAM allocator\n");
