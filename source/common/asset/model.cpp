@@ -16,10 +16,10 @@ void serialize(Archive& archive, model_asset& asset)
     archive(cereal::make_nvp("mesh", asset.mesh));
 }
 
-template void serialize<cereal::BinaryInputArchive>(cereal::BinaryInputArchive& archive, model_asset& asset);
-template void serialize<cereal::BinaryOutputArchive>(cereal::BinaryOutputArchive& archive, model_asset& asset);
-template void serialize<cereal::JSONInputArchive>(cereal::JSONInputArchive& archive, model_asset& asset);
-template void serialize<cereal::JSONOutputArchive>(cereal::JSONOutputArchive& archive, model_asset& asset);
+template void serialize<cereal::BinaryInputArchive>(cereal::BinaryInputArchive&, model_asset&);
+template void serialize<cereal::BinaryOutputArchive>(cereal::BinaryOutputArchive&, model_asset&);
+template void serialize<cereal::JSONInputArchive>(cereal::JSONInputArchive&, model_asset&);
+template void serialize<cereal::JSONOutputArchive>(cereal::JSONOutputArchive&, model_asset&);
 
 bool load_asset(const std::filesystem::path& archive_path, model_asset& asset)
 {

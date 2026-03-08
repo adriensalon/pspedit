@@ -28,4 +28,11 @@ struct index_buffer_descriptor {
     u32 count = 0;
 };
 
+
+template <typename Archive>
+void serialize(Archive& archive, vertex_buffer_descriptor& descriptor);
+
+template <typename Archive>
+void serialize(Archive& archive, index_buffer_descriptor& descriptor);
+
 }

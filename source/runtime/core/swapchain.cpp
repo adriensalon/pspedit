@@ -34,7 +34,7 @@ namespace {
     static u32 _to_gu_vertex_format(const vertex_descriptor& descriptor)
     {
         u32 _format = 0;
-        for (u8 _attribute_index = 0; _attribute_index < descriptor.attrib_count; ++_attribute_index) {
+        for (u8 _attribute_index = 0; _attribute_index < descriptor.attributes_count; ++_attribute_index) {
             const vertex_attribute& _attribute = descriptor.attributes[_attribute_index];
 
             switch (_attribute.semantic) {

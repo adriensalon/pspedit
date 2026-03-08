@@ -31,8 +31,11 @@ struct vertex_descriptor {
     u16 stride = 0;
     u8 morph_targets = 1;
     u8 skin_weights = 0;
+    u8 attributes_count = 0;
     std::array<vertex_attribute, 8> attributes = {};
-    u8 attrib_count = 0;
 };
+
+template <typename Archive>
+void serialize(Archive& archive, vertex_descriptor& descriptor);
 
 }

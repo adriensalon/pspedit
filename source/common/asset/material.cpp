@@ -27,10 +27,10 @@ void serialize(Archive& archive, material_asset& asset)
     archive(cereal::make_nvp("shininess", asset.shininess));
 }
 
-template void serialize<cereal::BinaryInputArchive>(cereal::BinaryInputArchive& archive, material_asset& asset);
-template void serialize<cereal::BinaryOutputArchive>(cereal::BinaryOutputArchive& archive, material_asset& asset);
-template void serialize<cereal::JSONInputArchive>(cereal::JSONInputArchive& archive, material_asset& asset);
-template void serialize<cereal::JSONOutputArchive>(cereal::JSONOutputArchive& archive, material_asset& asset);
+template void serialize<cereal::BinaryInputArchive>(cereal::BinaryInputArchive&, material_asset&);
+template void serialize<cereal::BinaryOutputArchive>(cereal::BinaryOutputArchive&, material_asset&);
+template void serialize<cereal::JSONInputArchive>(cereal::JSONInputArchive&, material_asset&);
+template void serialize<cereal::JSONOutputArchive>(cereal::JSONOutputArchive&, material_asset&);
 
 bool load_asset(const std::filesystem::path& archive_path, material_asset& asset)
 {

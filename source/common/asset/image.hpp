@@ -16,7 +16,7 @@ struct image_asset {
 template <typename Archive>
 void serialize(Archive& archive, image_asset& asset);
 
-bool load_image(const std::filesystem::path& archive_path, image_asset& asset);
-bool save_image(const std::filesystem::path& archive_path, const image_asset& asset);
+bool load_asset(const std::filesystem::path& archive_path, image_asset& asset);
+bool save_asset(const std::filesystem::path& archive_path, const image_asset& asset);
 
 }

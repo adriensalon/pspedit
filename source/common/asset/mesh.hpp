@@ -10,8 +10,8 @@ namespace pspedit {
 struct mesh_asset {
     u16 version = 1;
     vertex_buffer_descriptor vertex_buffer = {};
-    std::vector<u8> vertices = {};
     index_buffer_descriptor index_buffer = {};
+    std::vector<u8> vertices = {};
     std::vector<u16> indices = {};
 };
 
