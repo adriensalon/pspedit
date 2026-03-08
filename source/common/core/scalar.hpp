@@ -19,6 +19,6 @@ using vec4_f32 = std::array<f32, 4>;
 
 using mat2_f32 = std::array<std::array<f32, 2>, 2>;
 using mat3_f32 = std::array<std::array<f32, 3>, 3>;
-using mat4_f32 = std::array<std::array<f32, 4>, 4>;
+using f32x4x4 = std::array<std::array<f32, 4>, 4>;
 
 }

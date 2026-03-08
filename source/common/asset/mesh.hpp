@@ -1,19 +1,24 @@
 #pragma once
 
+#include <filesystem>
+#include <vector>
+
 #include <common/core/buffer.hpp>
 
 namespace pspedit {
 
-struct mesh_asset_header {
-    // meta
+struct mesh_asset {
+    u16 version = 1;
     vertex_buffer_descriptor vertex_buffer = {};
+    std::vector<u8> vertices = {};
     index_buffer_descriptor index_buffer = {};
+    std::vector<u16> indices = {};
 };
 
-struct mesh_asset {
-    mesh_asset_header header = {};
-    void* vertices = nullptr;
-    void* indices = nullptr;
-};
+template <typename Archive>
+void serialize(Archive& archive, mesh_asset& header);
+
+bool load_mesh(const std::filesystem::path& archive_path, mesh_asset& asset);
+bool save_mesh(const std::filesystem::path& archive_path, const mesh_asset& asset);
 
 }

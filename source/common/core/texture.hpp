@@ -5,13 +5,17 @@
 namespace pspedit {
 
 enum struct pixel_format : u8 {
+    r4,
     r8,
     r16,
     r32,
     rgb565,
     rgba4444,
     rgba5551,
-    rgba8888
+    rgba8888,
+	dxt1,
+	dxt3,
+	dxt5
 };
 
 enum struct texture_filter : u8 {

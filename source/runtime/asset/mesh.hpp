@@ -13,9 +13,10 @@ struct mesh {
     mesh& operator=(const mesh& other) = delete;
     mesh(mesh&& other) noexcept = default;
     mesh& operator=(mesh&& other) noexcept = default;
+	~mesh();
 
 private:
-    mesh_asset_header _asset_header;
+    mesh_asset _asset;
     vertex_buffer _vertex_buffer;
     index_buffer _index_buffer;
 };

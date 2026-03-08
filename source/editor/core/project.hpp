@@ -3,8 +3,11 @@
 #include <filesystem>
 #include <optional>
 #include <vector>
+#include <unordered_map>
 
-#include <common/asset/image.hpp>
+#include <common/core/id.hpp>
+#include <editor/asset/image.hpp>
+#include <editor/asset/mesh.hpp>
 // #include <common/asset/material.hpp>
 // #include <common/asset/mesh.hpp>
 // #include <common/asset/scene.hpp>
@@ -38,6 +41,8 @@ struct editor_project {
     // object_database<pspedit::transform_object> transforms = {};
     // object_database<pspedit::scene_object> scenes = {};
     // object_database<pspedit::script_object> scripts = {};
+
+	std::unordered_map<pspedit::u32, pspedit::image_import> images = {};
     std::filesystem::path directory = {};
 };
 

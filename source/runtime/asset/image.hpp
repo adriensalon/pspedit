@@ -18,8 +18,7 @@ struct runtime_image_header {
 };
 
 struct image {
-    image(vram_allocator& allocator, const image_header& header);
-    image(vram_allocator& allocator, const image_header& header, const void* pixels);
+    image(vram_allocator& allocator, const image_asset& asset);
 
 private:
     texture _texture;
