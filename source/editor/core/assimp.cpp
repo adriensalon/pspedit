@@ -4,7 +4,7 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
-#include <editor/asset/mesh.hpp>
+#include <editor/core/project.hpp>
 #include <editor/core/log.hpp>
 
 namespace pspedit {
@@ -146,7 +146,7 @@ namespace {
 
 }
 
-void import_mesh(const std::filesystem::path& import_path, mesh_import& import)
+void import_assimp(const std::filesystem::path& import_path)
 {
     Assimp::Importer _importer;
     const aiScene* _scene = _importer.ReadFile(import_path.string(), aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType);
@@ -165,18 +165,20 @@ void import_mesh(const std::filesystem::path& import_path, mesh_import& import)
         const vertex_descriptor _vertex_descriptor = _build_vertex_descriptor(_mesh);
         index_format _index_format = index_format::u16;
 
-        // mesh_import _import = {};
-        import.import_path = import_path;
-        import.editor_name = import_path.filename().replace_extension().string();
-        import.asset.version = 1;
-        import.asset.vertices = _build_vertex_buffer(_mesh, _vertex_descriptor);
-        import.asset.indices = _build_index_buffer(_mesh, _index_format);
-        import.asset.vertex_buffer.vertex = _vertex_descriptor;
-        import.asset.vertex_buffer.usage = buffer_usage::static_draw;
-        import.asset.vertex_buffer.count = _mesh->mNumVertices;
-        import.asset.index_buffer.usage = buffer_usage::static_draw;
-        import.asset.index_buffer.format = _index_format;
-        import.asset.index_buffer.count = _mesh->mNumFaces * 3;
+        project_asset<mesh_asset> _import = {};
+        _import.editor_name = import_path.filename().replace_extension().string();
+        _import.import_path = import_path;
+        _import.asset.version = 1;
+        _import.asset.vertices = _build_vertex_buffer(_mesh, _vertex_descriptor);
+        _import.asset.indices = _build_index_buffer(_mesh, _index_format);
+        _import.asset.vertex_buffer.vertex = _vertex_descriptor;
+        _import.asset.vertex_buffer.usage = buffer_usage::static_draw;
+        _import.asset.vertex_buffer.count = _mesh->mNumVertices;
+        _import.asset.index_buffer.usage = buffer_usage::static_draw;
+        _import.asset.index_buffer.format = _index_format;
+        _import.asset.index_buffer.count = _mesh->mNumFaces * 3;
+		current_project->meshes.emplace(mesh_id(), std::move(_import));
+		// TODO generate new id
     }
 }
 

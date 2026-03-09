@@ -127,17 +127,17 @@ namespace {
     void _draw_inspector_image()
     {
         if (current_project->selected_image) {
-            image_import& _import = current_project->images[current_project->selected_image.value()];
-            ImGui::Text("Asset version %u", _import.image.version);
-            if (_draw_inspector_integer("Width", _import.image.texture.width)
-                || _draw_inspector_integer("Height", _import.image.texture.height)
-                || _draw_inspector_integer("Stride", _import.image.texture.stride)
-                || _draw_inspector_enum("Format", _import.image.texture.format, _pixel_format_names)
-                || _draw_inspector_enum("Filter min", _import.image.texture.filter_min, _texture_filter_names)
-                || _draw_inspector_enum("Filter mag", _import.image.texture.filter_mag, _texture_filter_names)
-                || _draw_inspector_enum("Wrap U", _import.image.texture.wrap_u, _texture_wrap_names)
-                || _draw_inspector_enum("Wrap V", _import.image.texture.wrap_v, _texture_wrap_names)) { // gpu image visualizer LATER
-                save_asset(current_project->directory / "install/assets/okok.bin", _import.image); // TODO bake path
+            project_asset<image_asset> _import = current_project->images[current_project->selected_image.value()];
+            ImGui::Text("Asset version %u", _import.asset.version);
+            if (_draw_inspector_integer("Width", _import.asset.texture.width)
+                || _draw_inspector_integer("Height", _import.asset.texture.height)
+                || _draw_inspector_integer("Stride", _import.asset.texture.stride)
+                || _draw_inspector_enum("Format", _import.asset.texture.format, _pixel_format_names)
+                || _draw_inspector_enum("Filter min", _import.asset.texture.filter_min, _texture_filter_names)
+                || _draw_inspector_enum("Filter mag", _import.asset.texture.filter_mag, _texture_filter_names)
+                || _draw_inspector_enum("Wrap U", _import.asset.texture.wrap_u, _texture_wrap_names)
+                || _draw_inspector_enum("Wrap V", _import.asset.texture.wrap_v, _texture_wrap_names)) { // gpu image visualizer LATER
+                save_asset(current_project->directory / "install/assets/okok.bin", _import.asset); // TODO bake path
             }
         }
     }
@@ -145,15 +145,15 @@ namespace {
     void _draw_inspector_mesh()
     {
         if (current_project->selected_mesh) {
-            mesh_import& _import = current_project->meshes[current_project->selected_mesh.value()];
+            project_asset<mesh_asset>& _import = current_project->meshes[current_project->selected_mesh.value()];
             ImGui::Text("Asset version %u", _import.asset.version);
             // if (_draw_inspector_integer("Vertex buffer stride", _import.asset.vertex_buffer.vertex.stride)
             //     || _draw_inspector_enum("Vertex buffer usage", _import.asset.vertex_buffer.usage, _pixel_format_names)
-            //     || _draw_inspector_enum("Filter min", _import.image.texture.filter_min, _texture_filter_names)
-            //     || _draw_inspector_enum("Filter mag", _import.image.texture.filter_mag, _texture_filter_names)
-            //     || _draw_inspector_enum("Wrap U", _import.image.texture.wrap_u, _texture_wrap_names)
-            //     || _draw_inspector_enum("Wrap V", _import.image.texture.wrap_v, _texture_wrap_names)) { // gpu image visualizer LATER
-            //     save_asset(current_project->directory / "install/assets/okok.bin", _import.image); // TODO bake path
+            //     || _draw_inspector_enum("Filter min", _import.asset.texture.filter_min, _texture_filter_names)
+            //     || _draw_inspector_enum("Filter mag", _import.asset.texture.filter_mag, _texture_filter_names)
+            //     || _draw_inspector_enum("Wrap U", _import.asset.texture.wrap_u, _texture_wrap_names)
+            //     || _draw_inspector_enum("Wrap V", _import.asset.texture.wrap_v, _texture_wrap_names)) { // gpu image visualizer LATER
+            //     save_asset(current_project->directory / "install/assets/okok.bin", _import.asset); // TODO bake path
             // }
         }
     }
@@ -161,17 +161,17 @@ namespace {
     void _draw_inspector_material()
     {
         if (current_project->selected_material) {
-            material_import& _import = current_project->materials[current_project->selected_material.value()];
+            project_asset<material_asset>& _import = current_project->materials[current_project->selected_material.value()];
             ImGui::Text("Asset version %u", _import.asset.version);
             if (_draw_inspector_enum("Cull mode", _import.asset.pipeline.cull, _cull_mode_names)
                 || _draw_inspector_boolean("Depth test enabled", _import.asset.pipeline.is_depth_test_enabled)
                 || _draw_inspector_boolean("Depth write enabled", _import.asset.pipeline.is_depth_write_enabled)
                 || _draw_inspector_enum("Depth operation", _import.asset.pipeline.depth_operation, _compare_operation_names)
-            //     || _draw_inspector_enum("Filter mag", _import.image.texture.filter_mag, _texture_filter_names)
-            //     || _draw_inspector_enum("Wrap U", _import.image.texture.wrap_u, _texture_wrap_names)
-            //     || _draw_inspector_enum("Wrap V", _import.image.texture.wrap_v, _texture_wrap_names)
+            //     || _draw_inspector_enum("Filter mag", _import.asset.texture.filter_mag, _texture_filter_names)
+            //     || _draw_inspector_enum("Wrap U", _import.asset.texture.wrap_u, _texture_wrap_names)
+            //     || _draw_inspector_enum("Wrap V", _import.asset.texture.wrap_v, _texture_wrap_names)
 			) { // gpu image visualizer LATER
-                // save_asset(current_project->directory / "install/assets/okok.bin", _import.image); // TODO bake path
+                // save_asset(current_project->directory / "install/assets/okok.bin", _import.asset); // TODO bake path
             }
         }
     }

@@ -15,7 +15,7 @@ namespace {
         }
 
         if (ImGui::TreeNode("Image")) {
-            for (const std::pair<const image_id, image_import>& _entry : current_project->images) {
+            for (const std::pair<const image_id, project_asset<image_asset>>& _entry : current_project->images) {
                 const std::string _name = _entry.second.editor_name;
                 if (!_filter.PassFilter(_name.c_str())) {
                     continue;
@@ -31,7 +31,7 @@ namespace {
         }
 
         if (ImGui::TreeNode("Mesh")) {
-			for (const std::pair<const mesh_id, mesh_import>& _entry : current_project->meshes) {
+			for (const std::pair<const mesh_id, project_asset<mesh_asset>>& _entry : current_project->meshes) {
                 const std::string _name = _entry.second.editor_name;
                 if (!_filter.PassFilter(_name.c_str())) {
                     continue;
@@ -47,7 +47,7 @@ namespace {
         }
 
         if (ImGui::TreeNode("Material")) {
-			for (const std::pair<const material_id, material_import>& _entry : current_project->materials) {
+			for (const std::pair<const material_id, project_asset<material_asset>>& _entry : current_project->materials) {
                 const std::string _name = _entry.second.editor_name;
                 if (!_filter.PassFilter(_name.c_str())) {
                     continue;

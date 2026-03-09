@@ -5,54 +5,55 @@
 #include <editor/core/ppsspp.hpp>
 #include <editor/core/project.hpp>
 
+namespace pspedit {
 namespace {
 
-[[nodiscard]] bool _ensure_directory(const std::filesystem::path& directory)
-{
-    if (!std::filesystem::is_directory(directory)) {
-        if (!std::filesystem::create_directory(directory)) {
-            log_error("Project", "Failed to create directory " + directory.string());
+    [[nodiscard]] bool _ensure_directory(const std::filesystem::path& directory)
+    {
+        if (!std::filesystem::is_directory(directory)) {
+            if (!std::filesystem::create_directory(directory)) {
+                log_error("Project", "Failed to create directory " + directory.string());
+                return false;
+            }
+            log_message("Project", "Created directory " + directory.string());
+        }
+        return true;
+    }
+
+    [[nodiscard]] bool _generate_cmake_file(const std::filesystem::path& source_directory)
+    {
+        const std::string _cmake_text = "cmake_minimum_required(VERSION 3.20) \n"
+                                        "project(pspedit_game) \n"
+                                        "add_subdirectory(pspedit)";
+
+        const std::filesystem::path _cmake_path = source_directory / "CMakeLists.txt";
+        std::ofstream _cmake_stream(_cmake_path, std::ios::binary);
+        if (!_cmake_stream.is_open()) {
+            log_error("Project", "Failed to open " + _cmake_path.string());
             return false;
         }
-        log_message("Project", "Created directory " + directory.string());
-    }
-    return true;
-}
+        _cmake_stream << _cmake_text;
+        if (!_cmake_stream.good()) {
+            log_error("Project", "Failed to write " + _cmake_path.string());
+            return false;
+        }
 
-[[nodiscard]] bool _generate_cmake_file(const std::filesystem::path& source_directory)
-{
-    const std::string _cmake_text = "cmake_minimum_required(VERSION 3.20) \n"
-                                    "project(pspedit_game) \n"
-                                    "add_subdirectory(pspedit)";
-
-    const std::filesystem::path _cmake_path = source_directory / "CMakeLists.txt";
-    std::ofstream _cmake_stream(_cmake_path, std::ios::binary);
-    if (!_cmake_stream.is_open()) {
-        log_error("Project", "Failed to open " + _cmake_path.string());
-        return false;
-    }
-    _cmake_stream << _cmake_text;
-    if (!_cmake_stream.good()) {
-        log_error("Project", "Failed to write " + _cmake_path.string());
-        return false;
+        return true;
     }
 
-    return true;
-}
+    [[nodiscard]] bool _install_game_executable(const std::filesystem::path& build_directory, const std::filesystem::path& install_directory)
+    {
+        const std::filesystem::path _eboot_build_path = build_directory / "pspeditrt" / "EBOOT.PBP";
+        const std::filesystem::path _eboot_install_path = install_directory / "EBOOT.PBP";
 
-[[nodiscard]] bool _install_game_executable(const std::filesystem::path& build_directory, const std::filesystem::path& install_directory)
-{
-    const std::filesystem::path _eboot_build_path = build_directory / "pspeditrt" / "EBOOT.PBP";
-    const std::filesystem::path _eboot_install_path = install_directory / "EBOOT.PBP";
+        if (!std::filesystem::copy_file(_eboot_build_path, _eboot_install_path, std::filesystem::copy_options::overwrite_existing)) {
+            log_error("Install", "Failed to install " + _eboot_install_path.string());
+            return false;
+        }
 
-    if (!std::filesystem::copy_file(_eboot_build_path, _eboot_install_path, std::filesystem::copy_options::overwrite_existing)) {
-        log_error("Install", "Failed to install " + _eboot_install_path.string());
-        return false;
+        log_message("Install", "Installed " + _eboot_install_path.string());
+        return true;
     }
-
-    log_message("Install", "Installed " + _eboot_install_path.string());
-    return true;
-}
 
 }
 
@@ -115,4 +116,5 @@ void build_and_run()
     if (!launch_ppsspp_game(_install_directory)) {
         return;
     }
+}
 }
