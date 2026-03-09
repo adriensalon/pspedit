@@ -56,21 +56,6 @@ namespace {
 
 }
 
-template <typename Object>
-Object object_database_entry<Object>::load_object() const
-{
-
-}
-
-template <typename Object>
-void object_database_entry<Object>::save_object(const Object& object) const
-{
-
-}
-
-// template void object_database_entry<pspedit::image_object>::save_object(const pspedit::image_object& object) const;
-// template void object_database_entry<pspedit::material_object>::save_object(const pspedit::material_object& object) const;
-
 void open_directory(const std::filesystem::path& project_directory)
 {
     if (!std::filesystem::is_directory(project_directory)) {

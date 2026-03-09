@@ -6,6 +6,7 @@ namespace pspedit {
 
 struct image_import {
     image_asset image = {};
+	std::string editor_name = {};
     std::filesystem::path import_path = "";
 };
 

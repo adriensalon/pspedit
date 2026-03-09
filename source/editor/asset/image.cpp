@@ -37,6 +37,7 @@ bool import_image(const std::filesystem::path& import_path, image_import& import
     const std::size_t _byte_count = static_cast<std::size_t>(_source_width) * static_cast<std::size_t>(_source_height) * _bytes_per_pixel;
 
 	import.import_path = import_path;
+	import.editor_name = import_path.filename().replace_extension().string();
 	import.image.version = 1;
     import.image.texture.stride = static_cast<u32>(_source_width) * _bytes_per_pixel;
     import.image.texture.format = pixel_format::rgba8888; // TODO
