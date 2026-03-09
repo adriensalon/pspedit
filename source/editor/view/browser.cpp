@@ -23,23 +23,24 @@ namespace {
                 const bool _is_selected = current_project->selected_image && (current_project->selected_image.value() == _entry.first);
                 if (ImGui::Selectable(_name.c_str(), _is_selected)) {
                     current_project->selected_image = _entry.first;
+                    current_project->selected_mesh = std::nullopt;
                 }
             }
             ImGui::TreePop();
         }
 
-        if (ImGui::TreeNode("Material")) {
-            // for (const object_database_entry<pspedit::material_object>& _entry : current_project->materials.entries) {
-            //     const std::string _name = _entry.editor_name ? _entry.editor_name.value() : "untitled";
-            //     if (!_filter.PassFilter(_name.c_str())) {
-            //         continue;
-            //     }
-            //     ImGui::Selectable(_name.c_str(), false);
-            // }
-            ImGui::TreePop();
-        }
-
         if (ImGui::TreeNode("Mesh")) {
+			for (const std::pair<const mesh_id, mesh_import>& _entry : current_project->meshes) {
+                const std::string _name = _entry.second.editor_name;
+                if (!_filter.PassFilter(_name.c_str())) {
+                    continue;
+                }
+                const bool _is_selected = current_project->selected_mesh && (current_project->selected_mesh.value() == _entry.first);
+                if (ImGui::Selectable(_name.c_str(), _is_selected)) {
+                    current_project->selected_image = std::nullopt;
+                    current_project->selected_mesh = _entry.first;
+                }
+            }
             ImGui::TreePop();
         }
     }

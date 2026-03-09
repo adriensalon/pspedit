@@ -1,6 +1,7 @@
 #include <imgui.h>
 
 #include <editor/asset/image.hpp>
+#include <editor/asset/mesh.hpp>
 #include <editor/core/dialog.hpp>
 #include <editor/core/project.hpp>
 #include <editor/view/header.hpp>
@@ -32,17 +33,27 @@ void draw_header()
                 // TODO
             }
 
-            if (ImGui::MenuItem("Import asset")) {
-                // TODO
+            if (ImGui::MenuItem("Import image")) {
                 const std::optional<std::filesystem::path> _asset_path = open_file_dialog({}, "");
                 if (_asset_path) {
                     image_import _import;
                     import_image(_asset_path.value(), _import);
 					current_project->images.emplace(image_id(), _import); // TODO create id
-					save_asset(current_project->directory / "install/assets/okok.bin", _import.image); // TODO bake path
+					save_asset(current_project->directory / "install/assets/image.bin", _import.image); // TODO bake path
                 }
             }
-            // TODO
+
+            if (ImGui::MenuItem("Import mesh")) {
+                const std::optional<std::filesystem::path> _asset_path = open_file_dialog({}, "");
+                if (_asset_path) {
+                    mesh_import _import;
+                    import_mesh(_asset_path.value(), _import);
+					current_project->meshes.emplace(mesh_id(), _import); // TODO create id
+					save_asset(current_project->directory / "install/assets/mesh.bin", _import.asset); // TODO bake path
+                }
+            }
+			
+
             ImGui::EndMenu();
         }
 

@@ -12,7 +12,7 @@ struct mesh_asset {
     vertex_buffer_descriptor vertex_buffer = {};
     index_buffer_descriptor index_buffer = {};
     std::vector<u8> vertices = {};
-    std::vector<u16> indices = {};
+    std::vector<u8> indices = {};
 };
 
 template <typename Archive>

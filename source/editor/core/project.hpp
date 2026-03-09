@@ -16,7 +16,9 @@ enum struct project_run_target {
 
 struct editor_project {
 	std::unordered_map<pspedit::image_id, pspedit::image_import> images = {};
+	std::unordered_map<pspedit::mesh_id, pspedit::mesh_import> meshes = {};
 	std::optional<pspedit::image_id> selected_image = std::nullopt;
+	std::optional<pspedit::mesh_id> selected_mesh = std::nullopt;
     std::filesystem::path directory = {};
 };
 

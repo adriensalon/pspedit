@@ -36,10 +36,12 @@ function(add_assimp SOURCE_DIR BINARY_DIR)
 		"${SOURCE_DIR}/contrib/zlib/zutil.c")
 
 	file(GLOB_RECURSE assimp_asset_lib_fbx_sources "${SOURCE_DIR}/code/AssetLib/FBX/*.cpp")
+	file(GLOB_RECURSE assimp_asset_lib_gltfcommon_sources "${SOURCE_DIR}/code/AssetLib/glTFCommon/*.cpp")
 	file(GLOB_RECURSE assimp_asset_lib_gltf_sources "${SOURCE_DIR}/code/AssetLib/glTF/*.cpp")
 	file(GLOB_RECURSE assimp_asset_lib_gltf2_sources "${SOURCE_DIR}/code/AssetLib/glTF2/*.cpp")
 	set(assimp_asset_lib_sources
 		${assimp_asset_lib_fbx_sources}
+		${assimp_asset_lib_gltfcommon_sources}
 		${assimp_asset_lib_gltf_sources}
 		${assimp_asset_lib_gltf2_sources})
 		
@@ -128,7 +130,7 @@ function(add_assimp SOURCE_DIR BINARY_DIR)
 		"${SOURCE_DIR}/include"
 		"${BINARY_DIR}/include")
 	target_include_directories(assimp PUBLIC ${assimp_private_include_dirs})
-	
+		
 	if(MSVC)
 		target_compile_options(assimp PRIVATE /wd4244 /wd4996)
 	endif()
