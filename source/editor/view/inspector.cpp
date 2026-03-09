@@ -3,7 +3,6 @@
 
 #include <imgui.h>
 
-#include <editor/asset/image.hpp>
 #include <editor/core/project.hpp>
 #include <editor/view/inspector.hpp>
 
@@ -32,6 +31,38 @@ namespace {
     static const std::vector<std::string> _texture_wrap_names = {
         "Clamp",
         "Repeat"
+    };
+
+    static const std::vector<std::string> _compare_operation_names = {
+        "Never",
+        "Less",
+        "Less or equal",
+        "Equal",
+        "Greater or equal",
+        "Greater",
+        "Not equal",
+        "Always"
+    };
+
+    static const std::vector<std::string> _cull_mode_names = {
+        "None",
+        "Front",
+        "Back"
+    };
+
+    static const std::vector<std::string> _blend_factor_names = {
+        "Zero",
+        "One",
+        "Source alpha",
+        "One minus source alpha",
+        "Destination alpha",
+        "One minus destination alpha"
+    };
+
+    static const std::vector<std::string> _blend_operation_names = {
+        "Add",
+        "Substract",
+        "Reverse substract"
     };
 
     template <typename Enum>
@@ -79,6 +110,20 @@ namespace {
         return _is_changed;
     }
 
+    template <typename Boolean>
+    bool _draw_inspector_boolean(const std::string& label, Boolean& value)
+    {
+        static_assert(std::is_arithmetic_v<Boolean>, "Value type must be arithmetic");
+        bool _bool_value = value != 0;
+
+        const bool _is_changed = ImGui::Checkbox(label.c_str(), &_bool_value);
+        if (_is_changed) {
+            value = static_cast<Boolean>(_bool_value);
+        }
+
+        return _is_changed;
+    }
+
     void _draw_inspector_image()
     {
         if (current_project->selected_image) {
@@ -113,6 +158,24 @@ namespace {
         }
     }
 
+    void _draw_inspector_material()
+    {
+        if (current_project->selected_material) {
+            material_import& _import = current_project->materials[current_project->selected_material.value()];
+            ImGui::Text("Asset version %u", _import.asset.version);
+            if (_draw_inspector_enum("Cull mode", _import.asset.pipeline.cull, _cull_mode_names)
+                || _draw_inspector_boolean("Depth test enabled", _import.asset.pipeline.is_depth_test_enabled)
+                || _draw_inspector_boolean("Depth write enabled", _import.asset.pipeline.is_depth_write_enabled)
+                || _draw_inspector_enum("Depth operation", _import.asset.pipeline.depth_operation, _compare_operation_names)
+            //     || _draw_inspector_enum("Filter mag", _import.image.texture.filter_mag, _texture_filter_names)
+            //     || _draw_inspector_enum("Wrap U", _import.image.texture.wrap_u, _texture_wrap_names)
+            //     || _draw_inspector_enum("Wrap V", _import.image.texture.wrap_v, _texture_wrap_names)
+			) { // gpu image visualizer LATER
+                // save_asset(current_project->directory / "install/assets/okok.bin", _import.image); // TODO bake path
+            }
+        }
+    }
+
 }
 
 void draw_inspector()
@@ -121,6 +184,7 @@ void draw_inspector()
     if (current_project) {
         _draw_inspector_image();
         _draw_inspector_mesh();
+        _draw_inspector_material();
     }
     ImGui::End();
 }

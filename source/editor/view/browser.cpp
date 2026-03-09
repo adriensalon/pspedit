@@ -24,6 +24,7 @@ namespace {
                 if (ImGui::Selectable(_name.c_str(), _is_selected)) {
                     current_project->selected_image = _entry.first;
                     current_project->selected_mesh = std::nullopt;
+                    current_project->selected_material = std::nullopt;
                 }
             }
             ImGui::TreePop();
@@ -39,6 +40,23 @@ namespace {
                 if (ImGui::Selectable(_name.c_str(), _is_selected)) {
                     current_project->selected_image = std::nullopt;
                     current_project->selected_mesh = _entry.first;
+                    current_project->selected_material = std::nullopt;
+                }
+            }
+            ImGui::TreePop();
+        }
+
+        if (ImGui::TreeNode("Material")) {
+			for (const std::pair<const material_id, material_import>& _entry : current_project->materials) {
+                const std::string _name = _entry.second.editor_name;
+                if (!_filter.PassFilter(_name.c_str())) {
+                    continue;
+                }
+                const bool _is_selected = current_project->selected_material && (current_project->selected_material.value() == _entry.first);
+                if (ImGui::Selectable(_name.c_str(), _is_selected)) {
+                    current_project->selected_image = std::nullopt;
+                    current_project->selected_material = std::nullopt;
+                    current_project->selected_material = _entry.first;
                 }
             }
             ImGui::TreePop();

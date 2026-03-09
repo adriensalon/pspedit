@@ -29,10 +29,6 @@ void draw_header()
 
         if (ImGui::BeginMenu("Asset")) {
 
-            if (ImGui::MenuItem("Create asset")) {
-                // TODO
-            }
-
             if (ImGui::MenuItem("Import image")) {
                 const std::optional<std::filesystem::path> _asset_path = open_file_dialog({}, "");
                 if (_asset_path) {
@@ -51,6 +47,13 @@ void draw_header()
 					current_project->meshes.emplace(mesh_id(), _import); // TODO create id
 					save_asset(current_project->directory / "install/assets/mesh.bin", _import.asset); // TODO bake path
                 }
+            }
+
+            if (ImGui::MenuItem("Create material")) {		
+				material_import _import = {};
+				_import.editor_name = "mymaterial";		
+				current_project->materials.emplace(material_id(), _import); // TODO create id
+				// save_asset(current_project->directory / "install/assets/material.bin", _import.asset); // TODO bake path
             }
 			
 

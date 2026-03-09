@@ -8,6 +8,7 @@
 #include <common/core/id.hpp>
 #include <editor/asset/image.hpp>
 #include <editor/asset/mesh.hpp>
+#include <editor/asset/material.hpp>
 
 enum struct project_run_target {
     ppsspp_emulator,
@@ -17,8 +18,10 @@ enum struct project_run_target {
 struct editor_project {
 	std::unordered_map<pspedit::image_id, pspedit::image_import> images = {};
 	std::unordered_map<pspedit::mesh_id, pspedit::mesh_import> meshes = {};
+	std::unordered_map<pspedit::material_id, pspedit::material_import> materials = {};
 	std::optional<pspedit::image_id> selected_image = std::nullopt;
 	std::optional<pspedit::mesh_id> selected_mesh = std::nullopt;
+	std::optional<pspedit::material_id> selected_material = std::nullopt;
     std::filesystem::path directory = {};
 };
 
