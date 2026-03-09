@@ -1,5 +1,15 @@
 #pragma once
 
-#include <filesystem>
+#include <common/asset/mesh.hpp>
 
-void import_assimp(const std::filesystem::path& assimp_path);
+namespace pspedit {
+
+struct mesh_import {
+    mesh_asset asset = {};
+    std::string editor_name = {};
+    std::filesystem::path import_path = "";
+};
+
+void import_mesh(const std::filesystem::path& import_path, mesh_import& import);
+
+}

@@ -38,15 +38,6 @@ struct content_slot {
     std::optional<ContentAsset> staging = std::nullopt;
 };
 
-struct content {
-    std::unordered_map<image_id, content_slot<image, image_asset>> _loaded_images = {};
-    std::unordered_map<mesh_id, content_slot<mesh, mesh_asset>> _loaded_meshes = {};
-    // std::unordered_map<material_id, content_slot<material, material_asset>> _loaded_materials = {};
-    std::unordered_map<transform_id, content_slot<transform, transform_asset>> _loaded_transforms = {};
-    std::unordered_map<package_id, content_slot<package, package_asset>> _loaded_packages = {};
-    std::unordered_map<scene_id, content_slot<scene, scene_asset>> _loaded_scenes = {};
-};
-
 template <typename Id>
 struct gamesave_request_delta {
     std::vector<Id> created_ids = {};
@@ -80,8 +71,12 @@ struct context {
     void save_gamesave_async(const std::string& gamesave_name, const gamesave_request& request);
 
 private:
-    content _loaded_content;
-    content _created_content;
+    std::unordered_map<image_id, content_slot<image, image_asset>> _loaded_images = {};
+    std::unordered_map<mesh_id, content_slot<mesh, mesh_asset>> _loaded_meshes = {};
+    // std::unordered_map<material_id, content_slot<material, material_asset>> _loaded_materials = {};
+    std::unordered_map<transform_id, content_slot<transform, transform_asset>> _loaded_transforms = {};
+    std::unordered_map<package_id, content_slot<package, package_asset>> _loaded_packages = {};
+    std::unordered_map<scene_id, content_slot<scene, scene_asset>> _loaded_scenes = {};
 };
 
 }
