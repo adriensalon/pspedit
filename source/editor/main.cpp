@@ -65,6 +65,7 @@ int main(int, char**)
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
 
@@ -102,7 +103,7 @@ int main(int, char**)
     // IM_ASSERT(font != nullptr);
 
     while (!glfwWindowShouldClose(window)) {
-        const std::string _window_title = window_title();
+        const std::string _window_title = pspedit::window_title();
         glfwSetWindowTitle(window, _window_title.c_str());
 
         glfwPollEvents();
@@ -113,7 +114,7 @@ int main(int, char**)
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        draw_view();
+        pspedit::draw_view();
         ImGui::Render();
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
