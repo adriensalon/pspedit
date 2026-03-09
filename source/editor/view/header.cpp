@@ -38,7 +38,8 @@ void draw_header()
                 if (_asset_path) {
                     image_import _import;
                     import_image(_asset_path.value(), _import);
-					current_project->images.emplace(image_id(), _import);
+					current_project->images.emplace(image_id(), _import); // TODO create id
+					save_asset(current_project->directory / "install/assets/okok.bin", _import.image); // TODO bake path
                 }
             }
             // TODO

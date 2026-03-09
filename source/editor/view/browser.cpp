@@ -20,7 +20,10 @@ namespace {
                 if (!_filter.PassFilter(_name.c_str())) {
                     continue;
                 }
-                ImGui::Selectable(_name.c_str(), false);
+                const bool _is_selected = current_project->selected_image && (current_project->selected_image.value() == _entry.first);
+                if (ImGui::Selectable(_name.c_str(), _is_selected)) {
+                    current_project->selected_image = _entry.first;
+                }
             }
             ImGui::TreePop();
         }
