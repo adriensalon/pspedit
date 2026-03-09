@@ -36,7 +36,7 @@ void import_stbimage(const std::filesystem::path& import_path)
     const u32 _bytes_per_pixel = _desired_channels;
     const std::size_t _byte_count = static_cast<std::size_t>(_source_width) * static_cast<std::size_t>(_source_height) * _bytes_per_pixel;
 
-	project_asset<image_asset> _import = {};
+	project_imported_asset<image_asset> _import = {};
 	_import.import_path = import_path;
 	_import.editor_name = import_path.filename().replace_extension().string();
 	_import.asset.version = 1;

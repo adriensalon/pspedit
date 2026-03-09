@@ -127,7 +127,7 @@ namespace {
     void _draw_inspector_image()
     {
         if (current_project->selected_image) {
-            project_asset<image_asset> _import = current_project->images[current_project->selected_image.value()];
+            project_imported_asset<image_asset> _import = current_project->images[current_project->selected_image.value()];
             ImGui::Text("Asset version %u", _import.asset.version);
             if (_draw_inspector_integer("Width", _import.asset.texture.width)
                 || _draw_inspector_integer("Height", _import.asset.texture.height)
@@ -145,7 +145,7 @@ namespace {
     void _draw_inspector_mesh()
     {
         if (current_project->selected_mesh) {
-            project_asset<mesh_asset>& _import = current_project->meshes[current_project->selected_mesh.value()];
+            project_imported_asset<mesh_asset>& _import = current_project->meshes[current_project->selected_mesh.value()];
             ImGui::Text("Asset version %u", _import.asset.version);
             // if (_draw_inspector_integer("Vertex buffer stride", _import.asset.vertex_buffer.vertex.stride)
             //     || _draw_inspector_enum("Vertex buffer usage", _import.asset.vertex_buffer.usage, _pixel_format_names)
@@ -167,11 +167,33 @@ namespace {
                 || _draw_inspector_boolean("Depth test enabled", _import.asset.pipeline.is_depth_test_enabled)
                 || _draw_inspector_boolean("Depth write enabled", _import.asset.pipeline.is_depth_write_enabled)
                 || _draw_inspector_enum("Depth operation", _import.asset.pipeline.depth_operation, _compare_operation_names)
-            //     || _draw_inspector_enum("Filter mag", _import.asset.texture.filter_mag, _texture_filter_names)
-            //     || _draw_inspector_enum("Wrap U", _import.asset.texture.wrap_u, _texture_wrap_names)
-            //     || _draw_inspector_enum("Wrap V", _import.asset.texture.wrap_v, _texture_wrap_names)
-			) { // gpu image visualizer LATER
+                //     || _draw_inspector_enum("Filter mag", _import.asset.texture.filter_mag, _texture_filter_names)
+                //     || _draw_inspector_enum("Wrap U", _import.asset.texture.wrap_u, _texture_wrap_names)
+                //     || _draw_inspector_enum("Wrap V", _import.asset.texture.wrap_v, _texture_wrap_names)
+            ) { // gpu image visualizer LATER
                 // save_asset(current_project->directory / "install/assets/okok.bin", _import.asset); // TODO bake path
+            }
+        }
+    }
+
+    void _draw_inspector_components()
+    {
+        if (current_project->selected_scene && current_project->selected_entity) {
+            const scene_id _selected_scene_id = current_project->selected_scene.value();
+            project_asset<scene_asset>& _selected_scene = current_project->scenes[_selected_scene_id];
+
+            for (scene_entity& _entity : _selected_scene.asset.entities) {
+                if (_entity.transform) {
+                    transform_asset& _transform = current_project->transforms[_entity.transform.value()];
+                    ImGui::TextUnformatted("Transform");
+                }
+                if (_entity.model) {
+                    model_asset& _model = current_project->models[_entity.model.value()];
+                    ImGui::Spacing();
+                    ImGui::TextUnformatted("Model");
+                    _draw_inspector_integer("Material ID", _model.material.value);
+                    _draw_inspector_integer("Mesh ID", _model.mesh.value);
+                }
             }
         }
     }
@@ -185,6 +207,7 @@ void draw_inspector()
         _draw_inspector_image();
         _draw_inspector_mesh();
         _draw_inspector_material();
+        _draw_inspector_components();
     }
     ImGui::End();
 }

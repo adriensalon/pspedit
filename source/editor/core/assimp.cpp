@@ -165,7 +165,7 @@ void import_assimp(const std::filesystem::path& import_path)
         const vertex_descriptor _vertex_descriptor = _build_vertex_descriptor(_mesh);
         index_format _index_format = index_format::u16;
 
-        project_asset<mesh_asset> _import = {};
+        project_imported_asset<mesh_asset> _import = {};
         _import.editor_name = import_path.filename().replace_extension().string();
         _import.import_path = import_path;
         _import.asset.version = 1;
