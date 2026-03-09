@@ -4,8 +4,6 @@
 
 namespace pspedit {
 
-using entity_id = u32;
-
 template <typename Tag>
 struct asset_id {
     u32 value = 0;

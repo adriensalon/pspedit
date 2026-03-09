@@ -10,6 +10,8 @@
 
 namespace pspedit {
 
+using entity_id = entt::entity;
+
 struct scene {
     scene(const scene_asset& asset);
     scene(const scene& other) = delete;

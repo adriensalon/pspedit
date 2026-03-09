@@ -49,24 +49,6 @@ namespace {
     return _filters;
 }
 
-[[nodiscard]] static std::string _to_utf8_path(const std::filesystem::path& path)
-{
-#if defined(_WIN32)
-    return path.generic_u8string();
-#else
-    return path.string();
-#endif
-}
-
-[[nodiscard]] static std::filesystem::path _from_utf8_path(const nfdchar_t* path)
-{
-#if defined(_WIN32)
-    return std::filesystem::u8path(path);
-#else
-    return std::filesystem::path(path);
-#endif
-}
-
 }
 
 std::optional<std::filesystem::path> open_file_dialog(
@@ -74,15 +56,15 @@ std::optional<std::filesystem::path> open_file_dialog(
     const std::filesystem::path& default_path)
 {
     const std::string _filters = _build_filters(filters);
+	const std::string _default_path = default_path.string();
     const nfdchar_t* _filters_cstr = _filters.empty() ? nullptr : _filters.c_str();
-    const std::string _default_utf8 = default_path.empty() ? std::string {} : _to_utf8_path(default_path);
-    const nfdchar_t* _default_cstr = _default_utf8.empty() ? nullptr : _default_utf8.c_str();
+    const nfdchar_t* _default_cstr = _default_path.empty() ? nullptr : _default_path.c_str();
     nfdchar_t* _filepath_cstr = nullptr;
     
     if (NFD_OpenDialog(_filters_cstr, _default_cstr, &_filepath_cstr) != NFD_OKAY) {
         return std::nullopt;
     }
-    const std::filesystem::path _path = _from_utf8_path(_filepath_cstr);
+    const std::filesystem::path _path(_filepath_cstr);
     free(_filepath_cstr);
     
     return _path;
@@ -93,15 +75,15 @@ std::optional<std::filesystem::path> save_file_dialog(
     const std::filesystem::path& default_path)
 {
     const std::string _filters = _build_filters(filters);
+	const std::string _default_path = default_path.string();
     const nfdchar_t* _filters_cstr = _filters.empty() ? nullptr : _filters.c_str();
-    const std::string _default_utf8 = default_path.empty() ? std::string {} : _to_utf8_path(default_path);
-    const nfdchar_t* _default_cstr = _default_utf8.empty() ? nullptr : _default_utf8.c_str();
+    const nfdchar_t* _default_cstr = _default_path.empty() ? nullptr : _default_path.c_str();
     nfdchar_t* _filepath_cstr = nullptr;
     
     if (NFD_SaveDialog(_filters_cstr, _default_cstr, &_filepath_cstr) != NFD_OKAY) {
         return std::nullopt;
     }
-    const std::filesystem::path _path = _from_utf8_path(_filepath_cstr);
+    const std::filesystem::path _path(_filepath_cstr);
     std::free(_filepath_cstr);
     
     return _path;
@@ -110,14 +92,14 @@ std::optional<std::filesystem::path> save_file_dialog(
 std::optional<std::filesystem::path> pick_directory_dialog(
     const std::filesystem::path& default_path)
 {
-    const std::string _default_utf8 = default_path.empty() ? std::string {} : _to_utf8_path(default_path);
-    const nfdchar_t* _default_cstr = _default_utf8.empty() ? nullptr : _default_utf8.c_str();
+	const std::string _default_path = default_path.string();
+    const nfdchar_t* _default_cstr = _default_path.empty() ? nullptr : _default_path.c_str();
     nfdchar_t* _dirpath_cstr = nullptr;
     
     if (NFD_PickFolder(_default_cstr, &_dirpath_cstr) != NFD_OKAY) {
         return std::nullopt;
     }
-    const std::filesystem::path _path = _from_utf8_path(_dirpath_cstr);
+    const std::filesystem::path _path(_dirpath_cstr);
     std::free(_dirpath_cstr);
     
     return _path;

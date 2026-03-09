@@ -1,17 +1,21 @@
 #pragma once
 
 #include <filesystem>
-#include <unordered_map>
+#include <optional>
+#include <vector>
 
 #include <common/core/id.hpp>
 
 namespace pspedit {
 
+struct scene_entity {
+	std::optional<model_id> model = std::nullopt;
+	std::optional<transform_id> transform = std::nullopt;
+};
+
 struct scene_asset {
 	u16 version = 1;
-	std::vector<entity_id> entities = {};
-	std::unordered_map<entity_id, model_id> models = {};
-	std::unordered_map<entity_id, transform_id> transforms = {};
+	std::vector<scene_entity> entities = {};
 };
 
 template <typename Archive>

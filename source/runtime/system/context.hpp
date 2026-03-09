@@ -47,6 +47,19 @@ struct content {
     std::unordered_map<scene_id, content_slot<scene, scene_asset>> _loaded_scenes = {};
 };
 
+template <typename Id>
+struct gamesave_request_delta {
+    std::vector<Id> created_ids = {};
+    std::vector<Id> modified_ids = {};
+    std::vector<Id> destroyed_ids = {};
+};
+
+struct gamesave_request {
+    gamesave_request_delta<image_id> images = {};
+    gamesave_request_delta<mesh_id> meshes = {};
+    gamesave_request_delta<transform_id> transforms = {};
+};
+
 struct context {
 
     [[nodiscard]] image* resolve_image(const image_id id);
@@ -64,11 +77,11 @@ struct context {
     [[nodiscard]] content_status scene_status(const scene_id id) const;
 
     void load_gamesave_async(const std::string& gamesave_name);
-    void save_gamesave_async(const std::string& gamesave_name);
+    void save_gamesave_async(const std::string& gamesave_name, const gamesave_request& request);
 
 private:
     content _loaded_content;
-    content _runtime_content;
+    content _created_content;
 };
 
 }

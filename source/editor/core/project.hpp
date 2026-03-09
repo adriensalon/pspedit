@@ -42,7 +42,7 @@ struct editor_project {
     // object_database<pspedit::scene_object> scenes = {};
     // object_database<pspedit::script_object> scripts = {};
 
-	std::unordered_map<pspedit::u32, pspedit::image_import> images = {};
+	std::unordered_map<pspedit::image_id, pspedit::image_import> images = {};
     std::filesystem::path directory = {};
 };
 

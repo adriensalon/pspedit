@@ -2,7 +2,8 @@
 
 #include <cereal/archives/binary.hpp>
 #include <cereal/archives/json.hpp>
-#include <cereal/types/unordered_map.hpp>
+#include <cereal/types/vector.hpp>
+#include <cereal/types/optional.hpp>
 
 #include <common/asset/scene.hpp>
 #include <common/core/archive.hpp>
@@ -10,11 +11,17 @@
 namespace pspedit {
 
 template <typename Archive>
+void serialize(Archive& archive, scene_entity& entity)
+{
+    archive(cereal::make_nvp("model", entity.model));
+    archive(cereal::make_nvp("transform", entity.transform));
+}
+
+template <typename Archive>
 void serialize(Archive& archive, scene_asset& asset)
 {
     archive(cereal::make_nvp("version", asset.version));
-    archive(cereal::make_nvp("models", asset.models));
-    archive(cereal::make_nvp("transforms", asset.transforms));
+    archive(cereal::make_nvp("models", asset.entities));
 }
 
 template void serialize<cereal::BinaryInputArchive>(cereal::BinaryInputArchive&, scene_asset&);
