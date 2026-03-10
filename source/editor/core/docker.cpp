@@ -75,7 +75,7 @@ static bool _is_docker_installed = false;
 
 }
 
-bool docker_build_project(const std::filesystem::path& source_directory, const std::filesystem::path& build_directory)
+bool docker_build_project(const std::filesystem::path& source_directory, const std::filesystem::path& build_directory, const std::optional<std::filesystem::path>& custom_pspedit_dir)
 {
     if (!_ensure_docker_installed()) {
         return false;
@@ -88,7 +88,7 @@ bool docker_build_project(const std::filesystem::path& source_directory, const s
     }
 
     // Ensure absolute paths for docker bind mounts
-    const auto src_abs = std::filesystem::absolute(source_directory);
+	const std::filesystem::path src_abs = custom_pspedit_dir ? custom_pspedit_dir.value() : std::filesystem::absolute(source_directory);
     const auto bld_abs = std::filesystem::absolute(build_directory);
 
     // Make sure build dir exists on host
@@ -96,26 +96,39 @@ bool docker_build_project(const std::filesystem::path& source_directory, const s
     std::filesystem::create_directories(bld_abs, ec);
 
     // Container mount points
-    const std::string src_mnt = "/source";
-    const std::string bld_mnt = "/build";
+    // const std::string src_mnt = "/source";
+    // const std::string bld_mnt = "/build";
 
-    // Script: clone if missing, then configure + build
-    const std::string script = "set -e; "
-                               "export PSPDEV=/usr/local/pspdev; "
-                               "export PATH=\"$PATH:$PSPDEV/bin\"; "
+    std::string script;
+    if (custom_pspedit_dir) {
 
-							   // TODO ENTT & CEREAL
+        script = "set -e; "
+                 "export PSPDEV=/usr/local/pspdev; "
+                 "export PATH=\"$PATH:$PSPDEV/bin\"; "
 
-                               // clone pspedit if missing
-                               "if [ ! -d /source/pspedit/.git ]; then "
-                               "  rm -rf /source/pspedit; "
-                               "  git clone --depth 1 https://github.com/adriensalon/pspedit /source/pspedit; "
-                               "fi; "
+                 // build with psp-cmake
+                 "command -v psp-cmake >/dev/null || { echo \"psp-cmake not found; PATH=$PATH\"; exit 127; }; "
+                 "psp-cmake -S /source -B /build -DBUILD_PRX=1 -DENC_PRX=1 -DPSPEDIT_BUILD_GAME=1; "
+                 "cmake --build /build; ";
 
-                               // build with psp-cmake
-                               "command -v psp-cmake >/dev/null || { echo \"psp-cmake not found; PATH=$PATH\"; exit 127; }; "
-                               "psp-cmake -S /source -B /build -DBUILD_PRX=1 -DENC_PRX=1 -DPSPEDIT_BUILD_GAME=1; "
-                               "cmake --build /build; ";
+    } else {
+        script = "set -e; "
+                 "export PSPDEV=/usr/local/pspdev; "
+                 "export PATH=\"$PATH:$PSPDEV/bin\"; "
+
+                 // TODO ENTT & CEREAL
+
+                 // clone pspedit if missing
+                 "if [ ! -d /source/pspedit/.git ]; then "
+                 "  rm -rf /source/pspedit; "
+                 "  git clone --depth 1 https://github.com/adriensalon/pspedit /source/pspedit; "
+                 "fi; "
+
+                 // build with psp-cmake
+                 "command -v psp-cmake >/dev/null || { echo \"psp-cmake not found; PATH=$PATH\"; exit 127; }; "
+                 "psp-cmake -S /source -B /build -DBUILD_PRX=1 -DENC_PRX=1 -DPSPEDIT_BUILD_GAME=1; "
+                 "cmake --build /build; ";
+    }
 
     std::vector<std::string> args = {
         "run", "--rm",

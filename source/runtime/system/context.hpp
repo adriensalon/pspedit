@@ -5,6 +5,7 @@
 #include <string>
 #include <unordered_map>
 
+#include <common/asset/content.hpp>
 #include <common/asset/image.hpp>
 #include <common/asset/material.hpp>
 #include <common/asset/mesh.hpp>
@@ -22,6 +23,8 @@
 
 namespace pspedit {
 
+struct vram_allocator;
+
 enum struct content_status {
     not_found,
     failed,
@@ -32,7 +35,7 @@ enum struct content_status {
 };
 
 template <typename Content, typename ContentAsset>
-struct content_slot {
+struct asset_content_slot {
     std::atomic<content_status> status = content_status::not_found;
     std::optional<Content> content = std::nullopt;
     std::optional<ContentAsset> staging = std::nullopt;
@@ -52,6 +55,7 @@ struct gamesave_request {
 };
 
 struct context {
+    context(vram_allocator& allocator, const content_asset& content);
 
     [[nodiscard]] image* resolve_image(const image_id id);
     [[nodiscard]] material* resolve_material(const material_id id);
@@ -59,7 +63,7 @@ struct context {
     [[nodiscard]] model* resolve_model(const model_id id);
     [[nodiscard]] transform* resolve_transform(const transform_id id);
 
-    void load_package_async(const package_id id);
+    void load_package_(const package_id id);
     void load_scene_async(const scene_id id);
     void unload_package(const package_id id);
     void unload_scene(const scene_id id);
@@ -71,12 +75,15 @@ struct context {
     void save_gamesave_async(const std::string& gamesave_name, const gamesave_request& request);
 
 private:
-    std::unordered_map<image_id, content_slot<image, image_asset>> _loaded_images = {};
-    std::unordered_map<mesh_id, content_slot<mesh, mesh_asset>> _loaded_meshes = {};
-    // std::unordered_map<material_id, content_slot<material, material_asset>> _loaded_materials = {};
-    std::unordered_map<transform_id, content_slot<transform, transform_asset>> _loaded_transforms = {};
-    std::unordered_map<package_id, content_slot<package, package_asset>> _loaded_packages = {};
-    std::unordered_map<scene_id, content_slot<scene, scene_asset>> _loaded_scenes = {};
+    content_asset _content;
+    std::unordered_map<image_id, asset_content_slot<image, image_asset>> _loaded_images;
+    std::unordered_map<mesh_id, asset_content_slot<mesh, mesh_asset>> _loaded_meshes;
+    std::unordered_map<material_id, asset_content_slot<material, material_asset>> _loaded_materials;
+    std::unordered_map<scene_id, asset_content_slot<scene, scene_asset>> _loaded_scenes;
+    std::unordered_map<package_id, asset_content_slot<package, package_asset>> _loaded_packages;
+	entt::registry _loaded_components;
+    std::unordered_map<model_id, model*> _loaded_models;
+    std::unordered_map<transform_id, transform*> _loaded_transforms;
 };
 
 }

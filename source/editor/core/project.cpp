@@ -1,9 +1,31 @@
 #include <fstream>
 
+#include <cereal/archives/json.hpp>
+#include <cereal/types/optional.hpp>
+#include <cereal/types/string.hpp>
+
 #include <editor/core/docker.hpp>
 #include <editor/core/log.hpp>
 #include <editor/core/ppsspp.hpp>
 #include <editor/core/project.hpp>
+
+namespace cereal {
+
+template <class Archive>
+void save(Archive& archive, const std::filesystem::path& value)
+{
+    archive(value.string());
+}
+
+template <class Archive>
+void load(Archive& archive, std::filesystem::path& value)
+{
+    std::string temp;
+    archive(temp);
+    value = temp;
+}
+
+}
 
 namespace pspedit {
 namespace {
@@ -64,12 +86,28 @@ void open_directory(const std::filesystem::path& project_directory)
         return;
     }
 
-    // TODO project file .pspeditor
-
-    log_message("Project", "Loaded project from directory " + project_directory.string());
     current_project.reset();
     current_project = editor_project();
     current_project->directory = project_directory;
+
+    const std::filesystem::path _settings_path = project_directory / "settings.psp.json";
+    if (!std::filesystem::exists(_settings_path)) {
+        std::ofstream _fstream(_settings_path);
+        cereal::JSONOutputArchive _archive(_fstream);
+        _archive(cereal::make_nvp("name", current_project->name));
+        // _archive(cereal::make_nvp("cover_image", current_project->cover_image));
+        _archive(cereal::make_nvp("heap_memory", current_project->heap_memory));
+        _archive(cereal::make_nvp("custom_pspedit_dir", current_project->custom_pspedit_dir));
+    } else {
+        std::ifstream _fstream(_settings_path);
+        cereal::JSONInputArchive _archive(_fstream);
+        _archive(current_project->name);
+        // _archive(current_project->cover_image);
+        _archive(current_project->heap_memory);
+        _archive(current_project->custom_pspedit_dir);
+    }
+
+    log_message("Project", "Loaded project from directory " + project_directory.string());
 }
 
 void save_all()
@@ -107,7 +145,7 @@ void build_and_run()
     if (!_ensure_directory(_build_directory)) {
         return;
     }
-    if (!docker_build_project(_source_directory, _build_directory)) {
+    if (!docker_build_project(_source_directory, _build_directory, current_project->custom_pspedit_dir)) {
         return;
     }
     if (!_install_game_executable(_build_directory, _install_directory)) {

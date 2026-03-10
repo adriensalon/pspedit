@@ -34,6 +34,7 @@ struct project_imported_asset {
     std::optional<std::filesystem::path> import_path = std::nullopt;
 };
 
+
 struct editor_project {
     std::unordered_map<image_id, project_imported_asset<image_asset>> images = {};
     std::unordered_map<mesh_id, project_imported_asset<mesh_asset>> meshes = {};
@@ -46,6 +47,11 @@ struct editor_project {
     std::optional<material_id> selected_material = std::nullopt;
     std::optional<scene_id> selected_scene = std::nullopt;
     std::optional<u32> selected_entity = std::nullopt;
+
+	std::string name = "Untitled PSP game";
+	std::optional<image_id> cover_image = std::nullopt;
+	std::size_t heap_memory = 1024u;
+    std::optional<std::filesystem::path> custom_pspedit_dir = std::nullopt;
 	
     std::filesystem::path directory = {};
 };

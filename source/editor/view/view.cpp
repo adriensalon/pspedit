@@ -8,6 +8,7 @@
 #include <editor/view/header.hpp>
 #include <editor/view/inspector.hpp>
 #include <editor/view/view.hpp>
+#include <editor/view/settings.hpp>
 
 namespace pspedit {
 namespace {
@@ -81,6 +82,7 @@ void draw_view()
     draw_3dview();
     draw_inspector();
     draw_browser();
+    draw_settings();
 }
 
 }
