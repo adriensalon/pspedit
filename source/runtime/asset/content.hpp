@@ -5,6 +5,8 @@
 #include <string>
 #include <unordered_map>
 
+#include <entt/entity/registry.hpp>
+
 #include <common/asset/content.hpp>
 #include <common/asset/image.hpp>
 #include <common/asset/material.hpp>
@@ -17,8 +19,6 @@
 #include <runtime/asset/material.hpp>
 #include <runtime/asset/mesh.hpp>
 #include <runtime/asset/model.hpp>
-#include <runtime/asset/package.hpp>
-#include <runtime/asset/scene.hpp>
 #include <runtime/asset/transform.hpp>
 
 namespace pspedit {
@@ -35,7 +35,7 @@ enum struct content_status {
 template <typename Content, typename ContentAsset>
 struct asset_content_slot {
     Content content = {};
-    std::optional<ContentAsset> staging = std::nullopt;
+    std::optional<ContentAsset> staging = std::nullopt; // go unique ptr for memory bc once loaded we delete this
     std::atomic<content_status> status = content_status::not_found;
 };
 

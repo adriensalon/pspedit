@@ -8,10 +8,13 @@
 
 #include <common/asset/image.hpp>
 #include <common/asset/material.hpp>
+#include <common/asset/content.hpp>
 #include <common/asset/mesh.hpp>
 #include <common/asset/model.hpp>
 #include <common/asset/transform.hpp>
 #include <common/asset/scene.hpp>
+#include <common/asset/package.hpp>
+#include <editor/core/id.hpp>
 
 
 namespace pspedit {
@@ -41,7 +44,14 @@ struct editor_project {
     std::unordered_map<material_id, project_asset<material_asset>> materials = {};
     std::unordered_map<model_id, model_asset> models = {};
     std::unordered_map<transform_id, transform_asset> transforms = {};
+    std::unordered_map<package_id, project_asset<package_asset>> packages = {};
+    std::optional<package_id> main_package = std::nullopt;
     std::unordered_map<scene_id, project_asset<scene_asset>> scenes = {};
+    std::optional<scene_id> main_scene = std::nullopt;
+	content_asset content = {};
+
+
+	
     std::optional<image_id> selected_image = std::nullopt;
     std::optional<mesh_id> selected_mesh = std::nullopt;
     std::optional<material_id> selected_material = std::nullopt;
@@ -54,6 +64,7 @@ struct editor_project {
     std::optional<std::filesystem::path> custom_pspedit_dir = std::nullopt;
 	
     std::filesystem::path directory = {};
+	asset_ids ids;
 };
 
 inline std::optional<editor_project> current_project = std::nullopt;

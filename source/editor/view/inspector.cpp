@@ -2,6 +2,7 @@
 #include <type_traits>
 
 #include <imgui.h>
+#include <misc/cpp/imgui_stdlib.h>
 
 #include <editor/core/project.hpp>
 #include <editor/view/inspector.hpp>
@@ -127,18 +128,22 @@ namespace {
     void _draw_inspector_image()
     {
         if (current_project->selected_image) {
-            project_imported_asset<image_asset> _import = current_project->images[current_project->selected_image.value()];
+            project_imported_asset<image_asset>& _import = current_project->images[current_project->selected_image.value()];
             ImGui::Text("Asset version %u", _import.asset.version);
-            if (_draw_inspector_integer("Width", _import.asset.texture.width)
-                || _draw_inspector_integer("Height", _import.asset.texture.height)
-                || _draw_inspector_integer("Stride", _import.asset.texture.stride)
-                || _draw_inspector_enum("Format", _import.asset.texture.format, _pixel_format_names)
-                || _draw_inspector_enum("Filter min", _import.asset.texture.filter_min, _texture_filter_names)
-                || _draw_inspector_enum("Filter mag", _import.asset.texture.filter_mag, _texture_filter_names)
-                || _draw_inspector_enum("Wrap U", _import.asset.texture.wrap_u, _texture_wrap_names)
-                || _draw_inspector_enum("Wrap V", _import.asset.texture.wrap_v, _texture_wrap_names)) { // gpu image visualizer LATER
-                save_asset(current_project->directory / "install/assets/okok.bin", _import.asset); // TODO bake path
+            ImGui::InputText("Name", &_import.editor_name);
+            if (ImGui::Button("Save asset")) {
+                save_asset(current_project->directory / "install/assets" / (_import.editor_name + ".bin"), _import.asset);
             }
+            bool _is_dirty = false;
+            _is_dirty |= _draw_inspector_integer("Width", _import.asset.texture.width);
+            _is_dirty |= _draw_inspector_integer("Height", _import.asset.texture.height);
+            _is_dirty |= _draw_inspector_integer("Stride", _import.asset.texture.stride);
+            _is_dirty |= _draw_inspector_enum("Format", _import.asset.texture.format, _pixel_format_names);
+            _is_dirty |= _draw_inspector_enum("Filter min", _import.asset.texture.filter_min, _texture_filter_names);
+            _is_dirty |= _draw_inspector_enum("Filter mag", _import.asset.texture.filter_mag, _texture_filter_names);
+            _is_dirty |= _draw_inspector_enum("Wrap U", _import.asset.texture.wrap_u, _texture_wrap_names);
+            _is_dirty |= _draw_inspector_enum("Wrap V", _import.asset.texture.wrap_v, _texture_wrap_names);
+            // gpu image visualizer LATER
         }
     }
 
@@ -147,6 +152,10 @@ namespace {
         if (current_project->selected_mesh) {
             project_imported_asset<mesh_asset>& _import = current_project->meshes[current_project->selected_mesh.value()];
             ImGui::Text("Asset version %u", _import.asset.version);
+            ImGui::InputText("Name", &_import.editor_name);
+            if (ImGui::Button("Save asset")) {
+                save_asset(current_project->directory / "install/assets" / (_import.editor_name + ".bin"), _import.asset);
+            }
             // if (_draw_inspector_integer("Vertex buffer stride", _import.asset.vertex_buffer.vertex.stride)
             //     || _draw_inspector_enum("Vertex buffer usage", _import.asset.vertex_buffer.usage, _pixel_format_names)
             //     || _draw_inspector_enum("Filter min", _import.asset.texture.filter_min, _texture_filter_names)
@@ -163,16 +172,19 @@ namespace {
         if (current_project->selected_material) {
             project_asset<material_asset>& _import = current_project->materials[current_project->selected_material.value()];
             ImGui::Text("Asset version %u", _import.asset.version);
-            if (_draw_inspector_enum("Cull mode", _import.asset.pipeline.cull, _cull_mode_names)
-                || _draw_inspector_boolean("Depth test enabled", _import.asset.pipeline.is_depth_test_enabled)
-                || _draw_inspector_boolean("Depth write enabled", _import.asset.pipeline.is_depth_write_enabled)
-                || _draw_inspector_enum("Depth operation", _import.asset.pipeline.depth_operation, _compare_operation_names)
-                //     || _draw_inspector_enum("Filter mag", _import.asset.texture.filter_mag, _texture_filter_names)
-                //     || _draw_inspector_enum("Wrap U", _import.asset.texture.wrap_u, _texture_wrap_names)
-                //     || _draw_inspector_enum("Wrap V", _import.asset.texture.wrap_v, _texture_wrap_names)
-            ) { // gpu image visualizer LATER
-                // save_asset(current_project->directory / "install/assets/okok.bin", _import.asset); // TODO bake path
+            ImGui::InputText("Name", &_import.editor_name);
+            if (ImGui::Button("Save asset")) {
+                save_asset(current_project->directory / "install/assets" / (_import.editor_name + ".bin"), _import.asset);
             }
+            bool _is_dirty = false;
+            _is_dirty |= _draw_inspector_enum("Cull mode", _import.asset.pipeline.cull, _cull_mode_names);
+            _is_dirty |= _draw_inspector_boolean("Depth test enabled", _import.asset.pipeline.is_depth_test_enabled);
+            _is_dirty |= _draw_inspector_boolean("Depth write enabled", _import.asset.pipeline.is_depth_write_enabled);
+            _is_dirty |= _draw_inspector_enum("Depth operation", _import.asset.pipeline.depth_operation, _compare_operation_names);
+            //  _draw_inspector_enum("Filter mag", _import.asset.texture.filter_mag, _texture_filter_names)
+            //  _draw_inspector_enum("Wrap U", _import.asset.texture.wrap_u, _texture_wrap_names)
+            //  _draw_inspector_enum("Wrap V", _import.asset.texture.wrap_v, _texture_wrap_names)
+            // gpu image visualizer LATER
         }
     }
 

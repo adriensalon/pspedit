@@ -36,15 +36,15 @@ int main()
         sceKernelStartThread(_thread_id, 0, nullptr);
     }
 
-	pspedit::material_asset _mat;
-	// pspedit::load_asset("okok", _mat);
-
     pspedit::vram_allocator _vram;
     pspDebugScreenPrintf("Created VRAM allocator\n");
     pspedit::framebuffer _default_framebuffer = pspedit::framebuffer::default_framebuffer(_vram);
     pspDebugScreenPrintf("Created default framebuffer\n");
     pspedit::swapchain _context(_default_framebuffer, _gu_command_list, sizeof(_gu_command_list));
     pspDebugScreenPrintf("Created graphics context\n");
+
+	
+
 	
     int running = 1;
     while (running) {

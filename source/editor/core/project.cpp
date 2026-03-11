@@ -4,6 +4,9 @@
 #include <cereal/types/optional.hpp>
 #include <cereal/types/string.hpp>
 
+#include <common/asset/content.hpp>
+#include <common/asset/package.hpp>
+#include <common/asset/scene.hpp>
 #include <editor/core/docker.hpp>
 #include <editor/core/log.hpp>
 #include <editor/core/ppsspp.hpp>
@@ -75,6 +78,37 @@ namespace {
 
         log_message("Install", "Installed " + _eboot_install_path.string());
         return true;
+    }
+
+    void _ensure_loaded_content_asset(editor_project* project)
+    {
+        const std::filesystem::path _content_asset_path = project->directory / "install" / "assets" / "content.bin";
+        
+		if (!std::filesystem::exists(_content_asset_path)) {
+            const std::filesystem::path _main_package_asset_path = project->directory / "install" / "assets" / "mainpackage.bin";
+            const std::filesystem::path _main_scene_asset_path = project->directory / "install" / "assets" / "mainscene.bin";
+			
+			const package_id _main_package_id = project->ids.new_package_id();
+			const scene_id _main_scene_id = project->ids.new_scene_id();
+			project_asset<package_asset>& _main_package = project->packages[_main_package_id];
+            project_asset<scene_asset>& _main_scene = project->scenes[_main_scene_id];
+            _main_package.editor_name = "mainpackage";
+            _main_package.asset.scenes.emplace(_main_scene_id, _main_scene_asset_path);
+            _main_scene.editor_name = "mainscene";
+			save_asset(_main_package_asset_path, _main_package.asset);
+			save_asset(_main_scene_asset_path, _main_scene.asset);
+            
+			project->content = {};
+            project->content.main_package = _main_package_id;
+            project->content.packages.emplace(project->content.main_package, _main_package_asset_path);
+            project->content.main_scene = _main_scene_id;
+			save_asset(_content_asset_path, project->content);
+
+        } else {
+			load_asset(_content_asset_path, project->content);
+			// load_asset(project->content)
+
+		}
     }
 
 }
