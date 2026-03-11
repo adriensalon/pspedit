@@ -1,23 +1,24 @@
 #pragma once
 
+#include <optional>
+
+#include <common/core/id.hpp>
 #include <runtime/core/texture.hpp>
 
 namespace pspedit {
 
-struct image_asset;
-struct vram_allocator;
+struct runtime_image {
+    std::optional<texture> pixels = {};
+};
 
-struct image {
-    image(vram_allocator& allocator, const image_asset& asset);
-    image(const image& other) = delete;
-    image& operator=(const image& other) = delete;
-    image(image&& other) noexcept = default;
-    image& operator=(image&& other) noexcept = default;
-
-
+struct shared_image {
+    [[nodiscard]] inline bool has_value() const { return _asset_runtime != nullptr; }
+    [[nodiscard]] inline runtime_image* value() const { return _asset_runtime; }
 
 private:
-    texture _texture;
+	runtime_image* _asset_runtime = nullptr;
+	// later we add generation u32 for debug builds only
+	friend struct content_system;
 };
 
 }

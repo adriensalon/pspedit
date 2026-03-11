@@ -1,22 +1,25 @@
 #pragma once
 
+#include <optional>
+
+#include <common/core/id.hpp>
 #include <runtime/core/buffer.hpp>
 
 namespace pspedit {
 
-struct vram_allocator;
-struct mesh_asset;
+struct runtime_mesh {
+    std::optional<vertex_buffer> vertices = {};
+    std::optional<index_buffer> indices = {};
+};
 
-struct mesh {
-    mesh(vram_allocator& allocator, const mesh_asset& asset);
-    mesh(const mesh& other) = delete;
-    mesh& operator=(const mesh& other) = delete;
-    mesh(mesh&& other) noexcept = default;
-    mesh& operator=(mesh&& other) noexcept = default;
+struct shared_mesh {
+    [[nodiscard]] inline bool has_value() const { return _asset_runtime != nullptr; }
+    [[nodiscard]] inline runtime_mesh* value() const { return _asset_runtime; }
 
 private:
-    vertex_buffer _vertex_buffer;
-    index_buffer _index_buffer;
+	runtime_mesh* _asset_runtime = nullptr;
+	// later we add generation u32 for debug builds only
+	friend struct content_system;
 };
 
 }
